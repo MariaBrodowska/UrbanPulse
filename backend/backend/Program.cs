@@ -18,7 +18,12 @@ var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () =>
+{
+    var csvVileClass = new GeneringDataService();
+    var data = csvVileClass.LoadPopulationData();
+    return data;
+});
 app.MapGet("/w", () =>
 {
     var forecast =  Enumerable.Range(1, 5).Select(index =>

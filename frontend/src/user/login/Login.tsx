@@ -20,6 +20,7 @@ function DisplayLoginPage() {
                 <input type="password" id="passwordInput"/>
                 <input type="submit" value="Login" />
             </form>
+            <p>If you do not have an account, <a href="/register">Sign up here</a></p>
         </div>
     </div>
 }

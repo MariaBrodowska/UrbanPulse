@@ -1,0 +1,542 @@
+<stopy_procentowe_archiwum xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" data_publikacji="2015-03-04">
+<pozycje obowiazuje_od="1998-02-26">
+<pozycja id="ref" oprocentowanie="24,00"/>
+<pozycja id="lom" oprocentowanie="27,00"/>
+<pozycja id="red" oprocentowanie="24,50"/>
+</pozycje>
+<pozycje obowiazuje_od="1998-04-23">
+<pozycja id="ref" oprocentowanie="23,00"/>
+<pozycja id="lom" oprocentowanie="27,00"/>
+<pozycja id="red" oprocentowanie="24,50"/>
+</pozycje>
+<pozycje obowiazuje_od="1998-05-21">
+<pozycja id="ref" oprocentowanie="21,50"/>
+<pozycja id="lom" oprocentowanie="26,00"/>
+<pozycja id="red" oprocentowanie="23,50"/>
+</pozycje>
+<pozycje obowiazuje_od="1998-07-17">
+<pozycja id="ref" oprocentowanie="19,00"/>
+<pozycja id="lom" oprocentowanie="24,00"/>
+<pozycja id="red" oprocentowanie="21,50"/>
+</pozycje>
+<pozycje obowiazuje_od="1998-09-10">
+<pozycja id="ref" oprocentowanie="18,00"/>
+<pozycja id="lom" oprocentowanie="24,00"/>
+<pozycja id="red" oprocentowanie="21,50"/>
+</pozycje>
+<pozycje obowiazuje_od="1998-10-29">
+<pozycja id="ref" oprocentowanie="17,00"/>
+<pozycja id="lom" oprocentowanie="22,00"/>
+<pozycja id="red" oprocentowanie="20,00"/>
+</pozycje>
+<pozycje obowiazuje_od="1998-12-10">
+<pozycja id="ref" oprocentowanie="15,50"/>
+<pozycja id="lom" oprocentowanie="20,00"/>
+<pozycja id="red" oprocentowanie="18,25"/>
+</pozycje>
+<pozycje obowiazuje_od="1999-01-21">
+<pozycja id="ref" oprocentowanie="13,00"/>
+<pozycja id="lom" oprocentowanie="17,00"/>
+<pozycja id="red" oprocentowanie="15,50"/>
+</pozycje>
+<pozycje obowiazuje_od="1999-09-23">
+<pozycja id="ref" oprocentowanie="14,00"/>
+<pozycja id="lom" oprocentowanie="17,00"/>
+<pozycja id="red" oprocentowanie="15,50"/>
+</pozycje>
+<pozycje obowiazuje_od="1999-11-18">
+<pozycja id="ref" oprocentowanie="16,50"/>
+<pozycja id="lom" oprocentowanie="20,50"/>
+<pozycja id="red" oprocentowanie="19,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2000-02-24">
+<pozycja id="ref" oprocentowanie="17,50"/>
+<pozycja id="lom" oprocentowanie="21,50"/>
+<pozycja id="red" oprocentowanie="20,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2000-08-31">
+<pozycja id="ref" oprocentowanie="19,00"/>
+<pozycja id="lom" oprocentowanie="23,00"/>
+<pozycja id="red" oprocentowanie="21,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2001-03-01">
+<pozycja id="ref" oprocentowanie="18,00"/>
+<pozycja id="lom" oprocentowanie="22,00"/>
+<pozycja id="red" oprocentowanie="20,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2001-03-29">
+<pozycja id="ref" oprocentowanie="17,00"/>
+<pozycja id="lom" oprocentowanie="21,00"/>
+<pozycja id="red" oprocentowanie="19,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2001-06-28">
+<pozycja id="ref" oprocentowanie="15,50"/>
+<pozycja id="lom" oprocentowanie="19,50"/>
+<pozycja id="red" oprocentowanie="18,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2001-08-23">
+<pozycja id="ref" oprocentowanie="14,50"/>
+<pozycja id="lom" oprocentowanie="18,50"/>
+<pozycja id="red" oprocentowanie="17,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2001-10-26">
+<pozycja id="ref" oprocentowanie="13,00"/>
+<pozycja id="lom" oprocentowanie="17,00"/>
+<pozycja id="red" oprocentowanie="15,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2001-11-29">
+<pozycja id="ref" oprocentowanie="11,50"/>
+<pozycja id="lom" oprocentowanie="15,50"/>
+<pozycja id="red" oprocentowanie="14,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2001-12-01">
+<pozycja id="ref" oprocentowanie="11,50"/>
+<pozycja id="lom" oprocentowanie="15,50"/>
+<pozycja id="dep" oprocentowanie="7,50"/>
+<pozycja id="red" oprocentowanie="14,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2002-01-31">
+<pozycja id="ref" oprocentowanie="10,00"/>
+<pozycja id="lom" oprocentowanie="13,50"/>
+<pozycja id="dep" oprocentowanie="6,50"/>
+<pozycja id="red" oprocentowanie="12,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2002-04-26">
+<pozycja id="ref" oprocentowanie="9,50"/>
+<pozycja id="lom" oprocentowanie="12,50"/>
+<pozycja id="dep" oprocentowanie="6,50"/>
+<pozycja id="red" oprocentowanie="11,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2002-05-30">
+<pozycja id="ref" oprocentowanie="9,00"/>
+<pozycja id="lom" oprocentowanie="12,00"/>
+<pozycja id="dep" oprocentowanie="6,00"/>
+<pozycja id="red" oprocentowanie="10,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2002-06-27">
+<pozycja id="ref" oprocentowanie="8,50"/>
+<pozycja id="lom" oprocentowanie="11,50"/>
+<pozycja id="dep" oprocentowanie="5,50"/>
+<pozycja id="red" oprocentowanie="10,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2002-08-29">
+<pozycja id="ref" oprocentowanie="8,00"/>
+<pozycja id="lom" oprocentowanie="10,50"/>
+<pozycja id="dep" oprocentowanie="5,50"/>
+<pozycja id="red" oprocentowanie="9,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2002-09-26">
+<pozycja id="ref" oprocentowanie="7,50"/>
+<pozycja id="lom" oprocentowanie="10,00"/>
+<pozycja id="dep" oprocentowanie="5,00"/>
+<pozycja id="red" oprocentowanie="8,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2002-10-24">
+<pozycja id="ref" oprocentowanie="7,00"/>
+<pozycja id="lom" oprocentowanie="9,00"/>
+<pozycja id="dep" oprocentowanie="5,00"/>
+<pozycja id="red" oprocentowanie="7,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2002-11-28">
+<pozycja id="ref" oprocentowanie="6,75"/>
+<pozycja id="lom" oprocentowanie="8,75"/>
+<pozycja id="dep" oprocentowanie="4,75"/>
+<pozycja id="red" oprocentowanie="7,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2003-01-30">
+<pozycja id="ref" oprocentowanie="6,50"/>
+<pozycja id="lom" oprocentowanie="8,50"/>
+<pozycja id="dep" oprocentowanie="4,50"/>
+<pozycja id="red" oprocentowanie="7,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2003-02-27">
+<pozycja id="ref" oprocentowanie="6,25"/>
+<pozycja id="lom" oprocentowanie="8,00"/>
+<pozycja id="dep" oprocentowanie="4,50"/>
+<pozycja id="red" oprocentowanie="6,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2003-03-27">
+<pozycja id="ref" oprocentowanie="6,00"/>
+<pozycja id="lom" oprocentowanie="7,75"/>
+<pozycja id="dep" oprocentowanie="4,25"/>
+<pozycja id="red" oprocentowanie="6,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2003-04-25">
+<pozycja id="ref" oprocentowanie="5,75"/>
+<pozycja id="lom" oprocentowanie="7,25"/>
+<pozycja id="dep" oprocentowanie="4,25"/>
+<pozycja id="red" oprocentowanie="6,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2003-05-29">
+<pozycja id="ref" oprocentowanie="5,50"/>
+<pozycja id="lom" oprocentowanie="7,00"/>
+<pozycja id="dep" oprocentowanie="4,00"/>
+<pozycja id="red" oprocentowanie="6,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2003-06-26">
+<pozycja id="ref" oprocentowanie="5,25"/>
+<pozycja id="lom" oprocentowanie="6,75"/>
+<pozycja id="dep" oprocentowanie="3,75"/>
+<pozycja id="red" oprocentowanie="5,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2004-07-01">
+<pozycja id="ref" oprocentowanie="5,75"/>
+<pozycja id="lom" oprocentowanie="7,25"/>
+<pozycja id="dep" oprocentowanie="4,25"/>
+<pozycja id="red" oprocentowanie="6,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2004-07-29">
+<pozycja id="ref" oprocentowanie="6,00"/>
+<pozycja id="lom" oprocentowanie="7,50"/>
+<pozycja id="dep" oprocentowanie="4,50"/>
+<pozycja id="red" oprocentowanie="6,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2004-08-26">
+<pozycja id="ref" oprocentowanie="6,50"/>
+<pozycja id="lom" oprocentowanie="8,00"/>
+<pozycja id="dep" oprocentowanie="5,00"/>
+<pozycja id="red" oprocentowanie="7,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2005-03-31">
+<pozycja id="ref" oprocentowanie="6,00"/>
+<pozycja id="lom" oprocentowanie="7,50"/>
+<pozycja id="dep" oprocentowanie="4,50"/>
+<pozycja id="red" oprocentowanie="6,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2005-04-28">
+<pozycja id="ref" oprocentowanie="5,50"/>
+<pozycja id="lom" oprocentowanie="7,00"/>
+<pozycja id="dep" oprocentowanie="4,00"/>
+<pozycja id="red" oprocentowanie="6,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2005-06-30">
+<pozycja id="ref" oprocentowanie="5,00"/>
+<pozycja id="lom" oprocentowanie="6,50"/>
+<pozycja id="dep" oprocentowanie="3,50"/>
+<pozycja id="red" oprocentowanie="5,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2005-07-28">
+<pozycja id="ref" oprocentowanie="4,75"/>
+<pozycja id="lom" oprocentowanie="6,25"/>
+<pozycja id="dep" oprocentowanie="3,25"/>
+<pozycja id="red" oprocentowanie="5,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2005-09-01">
+<pozycja id="ref" oprocentowanie="4,50"/>
+<pozycja id="lom" oprocentowanie="6,00"/>
+<pozycja id="dep" oprocentowanie="3,00"/>
+<pozycja id="red" oprocentowanie="4,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2006-02-01">
+<pozycja id="ref" oprocentowanie="4,25"/>
+<pozycja id="lom" oprocentowanie="5,75"/>
+<pozycja id="dep" oprocentowanie="2,75"/>
+<pozycja id="red" oprocentowanie="4,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2006-03-01">
+<pozycja id="ref" oprocentowanie="4,00"/>
+<pozycja id="lom" oprocentowanie="5,50"/>
+<pozycja id="dep" oprocentowanie="2,50"/>
+<pozycja id="red" oprocentowanie="4,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2007-04-26">
+<pozycja id="ref" oprocentowanie="4,25"/>
+<pozycja id="lom" oprocentowanie="5,75"/>
+<pozycja id="dep" oprocentowanie="2,75"/>
+<pozycja id="red" oprocentowanie="4,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2007-06-28">
+<pozycja id="ref" oprocentowanie="4,50"/>
+<pozycja id="lom" oprocentowanie="6,00"/>
+<pozycja id="dep" oprocentowanie="3,00"/>
+<pozycja id="red" oprocentowanie="4,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2007-08-30">
+<pozycja id="ref" oprocentowanie="4,75"/>
+<pozycja id="lom" oprocentowanie="6,25"/>
+<pozycja id="dep" oprocentowanie="3,25"/>
+<pozycja id="red" oprocentowanie="5,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2007-11-29">
+<pozycja id="ref" oprocentowanie="5,00"/>
+<pozycja id="lom" oprocentowanie="6,50"/>
+<pozycja id="dep" oprocentowanie="3,50"/>
+<pozycja id="red" oprocentowanie="5,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2008-01-31">
+<pozycja id="ref" oprocentowanie="5,25"/>
+<pozycja id="lom" oprocentowanie="6,75"/>
+<pozycja id="dep" oprocentowanie="3,75"/>
+<pozycja id="red" oprocentowanie="5,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2008-02-28">
+<pozycja id="ref" oprocentowanie="5,50"/>
+<pozycja id="lom" oprocentowanie="7,00"/>
+<pozycja id="dep" oprocentowanie="4,00"/>
+<pozycja id="red" oprocentowanie="5,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2008-03-27">
+<pozycja id="ref" oprocentowanie="5,75"/>
+<pozycja id="lom" oprocentowanie="7,25"/>
+<pozycja id="dep" oprocentowanie="4,25"/>
+<pozycja id="red" oprocentowanie="6,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2008-06-26">
+<pozycja id="ref" oprocentowanie="6,00"/>
+<pozycja id="lom" oprocentowanie="7,50"/>
+<pozycja id="dep" oprocentowanie="4,50"/>
+<pozycja id="red" oprocentowanie="6,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2008-11-27">
+<pozycja id="ref" oprocentowanie="5,75"/>
+<pozycja id="lom" oprocentowanie="7,25"/>
+<pozycja id="dep" oprocentowanie="4,25"/>
+<pozycja id="red" oprocentowanie="6,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2008-12-24">
+<pozycja id="ref" oprocentowanie="5,00"/>
+<pozycja id="lom" oprocentowanie="6,50"/>
+<pozycja id="dep" oprocentowanie="3,50"/>
+<pozycja id="red" oprocentowanie="5,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2009-01-28">
+<pozycja id="ref" oprocentowanie="4,25"/>
+<pozycja id="lom" oprocentowanie="5,75"/>
+<pozycja id="dep" oprocentowanie="2,75"/>
+<pozycja id="red" oprocentowanie="4,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2009-02-26">
+<pozycja id="ref" oprocentowanie="4,00"/>
+<pozycja id="lom" oprocentowanie="5,50"/>
+<pozycja id="dep" oprocentowanie="2,50"/>
+<pozycja id="red" oprocentowanie="4,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2009-03-26">
+<pozycja id="ref" oprocentowanie="3,75"/>
+<pozycja id="lom" oprocentowanie="5,25"/>
+<pozycja id="dep" oprocentowanie="2,25"/>
+<pozycja id="red" oprocentowanie="4,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2009-06-25">
+<pozycja id="ref" oprocentowanie="3,50"/>
+<pozycja id="lom" oprocentowanie="5,00"/>
+<pozycja id="dep" oprocentowanie="2,00"/>
+<pozycja id="red" oprocentowanie="3,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2010-01-01">
+<pozycja id="ref" oprocentowanie="3,50"/>
+<pozycja id="lom" oprocentowanie="5,00"/>
+<pozycja id="dep" oprocentowanie="2,00"/>
+<pozycja id="red" oprocentowanie="3,75"/>
+<pozycja id="dys" oprocentowanie="4,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2011-01-20">
+<pozycja id="ref" oprocentowanie="3,75"/>
+<pozycja id="lom" oprocentowanie="5,25"/>
+<pozycja id="dep" oprocentowanie="2,25"/>
+<pozycja id="red" oprocentowanie="4,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2011-04-06">
+<pozycja id="ref" oprocentowanie="4,00"/>
+<pozycja id="lom" oprocentowanie="5,50"/>
+<pozycja id="dep" oprocentowanie="2,50"/>
+<pozycja id="red" oprocentowanie="4,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2011-05-12">
+<pozycja id="ref" oprocentowanie="4,25"/>
+<pozycja id="lom" oprocentowanie="5,75"/>
+<pozycja id="dep" oprocentowanie="2,75"/>
+<pozycja id="red" oprocentowanie="4,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2011-06-09">
+<pozycja id="ref" oprocentowanie="4,50"/>
+<pozycja id="lom" oprocentowanie="6,00"/>
+<pozycja id="dep" oprocentowanie="3,00"/>
+<pozycja id="red" oprocentowanie="4,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2012-05-10">
+<pozycja id="ref" oprocentowanie="4,75"/>
+<pozycja id="lom" oprocentowanie="6,25"/>
+<pozycja id="dep" oprocentowanie="3,25"/>
+<pozycja id="red" oprocentowanie="5,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2012-11-08">
+<pozycja id="ref" oprocentowanie="4,50"/>
+<pozycja id="lom" oprocentowanie="6,00"/>
+<pozycja id="dep" oprocentowanie="3,00"/>
+<pozycja id="red" oprocentowanie="4,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2012-12-06">
+<pozycja id="ref" oprocentowanie="4,25"/>
+<pozycja id="lom" oprocentowanie="5,75"/>
+<pozycja id="dep" oprocentowanie="2,75"/>
+<pozycja id="red" oprocentowanie="4,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2013-01-10">
+<pozycja id="ref" oprocentowanie="4,00"/>
+<pozycja id="lom" oprocentowanie="5,50"/>
+<pozycja id="dep" oprocentowanie="2,50"/>
+<pozycja id="red" oprocentowanie="4,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2013-02-07">
+<pozycja id="ref" oprocentowanie="3,75"/>
+<pozycja id="lom" oprocentowanie="5,25"/>
+<pozycja id="dep" oprocentowanie="2,25"/>
+<pozycja id="red" oprocentowanie="4,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2013-03-07">
+<pozycja id="ref" oprocentowanie="3,25"/>
+<pozycja id="lom" oprocentowanie="4,75"/>
+<pozycja id="dep" oprocentowanie="1,75"/>
+<pozycja id="red" oprocentowanie="3,50"/>
+</pozycje>
+<pozycje obowiazuje_od="2013-05-09">
+<pozycja id="ref" oprocentowanie="3,00"/>
+<pozycja id="lom" oprocentowanie="4,50"/>
+<pozycja id="dep" oprocentowanie="1,50"/>
+<pozycja id="red" oprocentowanie="3,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2013-06-06">
+<pozycja id="ref" oprocentowanie="2,75"/>
+<pozycja id="lom" oprocentowanie="4,25"/>
+<pozycja id="dep" oprocentowanie="1,25"/>
+<pozycja id="red" oprocentowanie="3,00"/>
+</pozycje>
+<pozycje obowiazuje_od="2013-07-04">
+<pozycja id="ref" oprocentowanie="2,50"/>
+<pozycja id="lom" oprocentowanie="4,00"/>
+<pozycja id="dep" oprocentowanie="1,00"/>
+<pozycja id="red" oprocentowanie="2,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2014-10-09">
+<pozycja id="ref" oprocentowanie="2,00"/>
+<pozycja id="lom" oprocentowanie="3,00"/>
+<pozycja id="dep" oprocentowanie="1,00"/>
+<pozycja id="red" oprocentowanie="2,25"/>
+</pozycje>
+<pozycje obowiazuje_od="2015-03-05">
+<pozycja id="ref" oprocentowanie="1,50"/>
+<pozycja id="lom" oprocentowanie="2,50"/>
+<pozycja id="dep" oprocentowanie="0,50"/>
+<pozycja id="red" oprocentowanie="1,75"/>
+</pozycje>
+<pozycje obowiazuje_od="2020-03-18">
+<pozycja id="ref" oprocentowanie="1,00"/>
+<pozycja id="lom" oprocentowanie="1,50"/>
+<pozycja id="dep" oprocentowanie="0,50"/>
+<pozycja id="red" oprocentowanie="1,05"/>
+<pozycja id="dys" oprocentowanie="1,10"/>
+</pozycje>
+<pozycje obowiazuje_od="2020-04-09">
+<pozycja id="ref" oprocentowanie="0,50"/>
+<pozycja id="lom" oprocentowanie="1,00"/>
+<pozycja id="dep" oprocentowanie="0,00"/>
+<pozycja id="red" oprocentowanie="0,55"/>
+<pozycja id="dys" oprocentowanie="0,60"/>
+</pozycje>
+<pozycje obowiazuje_od="2020-05-29">
+<pozycja id="ref" oprocentowanie="0,10"/>
+<pozycja id="lom" oprocentowanie="0,50"/>
+<pozycja id="dep" oprocentowanie="0,00"/>
+<pozycja id="red" oprocentowanie="0,11"/>
+<pozycja id="dys" oprocentowanie="0,12"/>
+</pozycje>
+<pozycje obowiazuje_od="2021-10-07">
+<pozycja id="ref" oprocentowanie="0,50"/>
+<pozycja id="lom" oprocentowanie="1,00"/>
+<pozycja id="dep" oprocentowanie="0,00"/>
+<pozycja id="red" oprocentowanie="0,51"/>
+<pozycja id="dys" oprocentowanie="0,52"/>
+</pozycje>
+<pozycje obowiazuje_od="2021-11-04">
+<pozycja id="ref" oprocentowanie="1,25"/>
+<pozycja id="lom" oprocentowanie="1,75"/>
+<pozycja id="dep" oprocentowanie="0,75"/>
+<pozycja id="red" oprocentowanie="1,30"/>
+<pozycja id="dys" oprocentowanie="1,35"/>
+</pozycje>
+<pozycje obowiazuje_od="2021-12-09">
+<pozycja id="ref" oprocentowanie="1,75"/>
+<pozycja id="lom" oprocentowanie="2,25"/>
+<pozycja id="dep" oprocentowanie="1,25"/>
+<pozycja id="red" oprocentowanie="1,80"/>
+<pozycja id="dys" oprocentowanie="1,85"/>
+</pozycje>
+<pozycje obowiazuje_od="2022-01-05">
+<pozycja id="ref" oprocentowanie="2,25"/>
+<pozycja id="lom" oprocentowanie="2,75"/>
+<pozycja id="dep" oprocentowanie="1,75"/>
+<pozycja id="red" oprocentowanie="2,30"/>
+<pozycja id="dys" oprocentowanie="2,35"/>
+</pozycje>
+<pozycje obowiazuje_od="2022-02-09">
+<pozycja id="ref" oprocentowanie="2,75"/>
+<pozycja id="lom" oprocentowanie="3,25"/>
+<pozycja id="dep" oprocentowanie="2,25"/>
+<pozycja id="red" oprocentowanie="2,80"/>
+<pozycja id="dys" oprocentowanie="2,85"/>
+</pozycje>
+<pozycje obowiazuje_od="2022-03-09">
+<pozycja id="ref" oprocentowanie="3,50"/>
+<pozycja id="lom" oprocentowanie="4,00"/>
+<pozycja id="dep" oprocentowanie="3,00"/>
+<pozycja id="red" oprocentowanie="3,55"/>
+<pozycja id="dys" oprocentowanie="3,60"/>
+</pozycje>
+<pozycje obowiazuje_od="2022-04-07">
+<pozycja id="ref" oprocentowanie="4,50"/>
+<pozycja id="lom" oprocentowanie="5,00"/>
+<pozycja id="dep" oprocentowanie="4,00"/>
+<pozycja id="red" oprocentowanie="4,55"/>
+<pozycja id="dys" oprocentowanie="4,60"/>
+</pozycje>
+<pozycje obowiazuje_od="2022-05-06">
+<pozycja id="ref" oprocentowanie="5,25"/>
+<pozycja id="lom" oprocentowanie="5,75"/>
+<pozycja id="dep" oprocentowanie="4,75"/>
+<pozycja id="red" oprocentowanie="5,30"/>
+<pozycja id="dys" oprocentowanie="5,35"/>
+</pozycje>
+<pozycje obowiazuje_od="2022-06-09">
+<pozycja id="ref" oprocentowanie="6,00"/>
+<pozycja id="lom" oprocentowanie="6,50"/>
+<pozycja id="dep" oprocentowanie="5,50"/>
+<pozycja id="red" oprocentowanie="6,05"/>
+<pozycja id="dys" oprocentowanie="6,10"/>
+</pozycje>
+<pozycje obowiazuje_od="2022-07-08">
+<pozycja id="ref" oprocentowanie="6,50"/>
+<pozycja id="lom" oprocentowanie="7,00"/>
+<pozycja id="dep" oprocentowanie="6,00"/>
+<pozycja id="red" oprocentowanie="6,55"/>
+<pozycja id="dys" oprocentowanie="6,60"/>
+</pozycje>
+<pozycje obowiazuje_od="2022-09-08">
+<pozycja id="ref" oprocentowanie="6,75"/>
+<pozycja id="lom" oprocentowanie="7,25"/>
+<pozycja id="dep" oprocentowanie="6,25"/>
+<pozycja id="red" oprocentowanie="6,80"/>
+<pozycja id="dys" oprocentowanie="6,85"/>
+</pozycje>
+<pozycje obowiazuje_od="2023-09-07">
+<pozycja id="ref" oprocentowanie="6,00"/>
+<pozycja id="lom" oprocentowanie="6,50"/>
+<pozycja id="dep" oprocentowanie="5,50"/>
+<pozycja id="red" oprocentowanie="6,05"/>
+<pozycja id="dys" oprocentowanie="6,10"/>
+</pozycje>
+<pozycje obowiazuje_od="2023-10-05">
+<pozycja id="ref" oprocentowanie="5,75"/>
+<pozycja id="lom" oprocentowanie="6,25"/>
+<pozycja id="dep" oprocentowanie="5,25"/>
+<pozycja id="red" oprocentowanie="5,80"/>
+<pozycja id="dys" oprocentowanie="5,85"/>
+</pozycje>
+<pozycje obowiazuje_od="2025-05-08">
+<pozycja id="ref" oprocentowanie="5,25"/>
+<pozycja id="lom" oprocentowanie="5,75"/>
+<pozycja id="dep" oprocentowanie="4,75"/>
+<pozycja id="red" oprocentowanie="5,30"/>
+<pozycja id="dys" oprocentowanie="5,35"/>
+</pozycje>
+</stopy_procentowe_archiwum>

@@ -6,17 +6,22 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using backend.Services; 
+using backend.Models;
+using Microsoft.AspNetCore.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Konfiguracja połączenia z bazą danych
+builder.Services.AddControllers();
+
+//polaczenie z baza
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
-// Rejestracja własnego serwisu
+//uslugi
 builder.Services.AddScoped<GeneringDataService>();
-
-// Rejestracja OpenAPI
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -28,6 +33,8 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
+        context.Database.EnsureCreated();
+        context.Database.Migrate();
         DbInitializer.Initialize(context);
     }
     catch (Exception ex)
@@ -44,6 +51,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.MapControllers();
 
 // Endpoint główny
 app.MapGet("/", ([FromServices] GeneringDataService dataService) =>

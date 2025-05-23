@@ -25,7 +25,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./backend/backend:/app/backend
-      - ~/.nuget/packages:/root/.nuget/packages:ro
+      - ~/.nuget/packages:/root/.nuget/packages
     ports:
       - "5000:5000"
     environment:

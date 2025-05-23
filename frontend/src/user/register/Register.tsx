@@ -14,7 +14,7 @@ function DisplayRegisterPage() {
         <div className="regdiv">
             <h1>Register</h1>
             <form onSubmit={RegisterHandleSumbit}>
-                <label htmlFor="usernameInput">Username</label>
+                <label htmlFor="usernameInput">Email</label>
                 <input type="text" id="usernameInput" />
                 <label htmlFor="passwordInput">Password</label>
                 <input type="password" id="passwordInput"/>

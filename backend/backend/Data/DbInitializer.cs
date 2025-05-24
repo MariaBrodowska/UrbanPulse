@@ -10,7 +10,6 @@ public class DbInitializer
     {
         context.Database.Migrate();
 
-        // J// if (context.Users.Any())eśli baza danych już zawiera dane, nie dodawaj ponownie
         if (context.Cities.Any())
             return;
 
@@ -31,7 +30,7 @@ public class DbInitializer
         };
         
         context.Roles.AddRange(roles);
-        context.SaveChanges(); // Zapisz role, aby uzyskać ID
+        context.SaveChanges(); 
     }
 
     private static void SeedUsers(AppDbContext context)
@@ -44,13 +43,13 @@ public class DbInitializer
             new User 
             { 
                 Email = "admin@example.com", 
-                Password = "admin123", // W produkcji powinno być zahashowane
+                Password = "admin123",
                 RoleId = adminRole.Id 
             },
             new User 
             { 
                 Email = "user@example.com", 
-                Password = "user123", // W produkcji powinno być zahashowane
+                Password = "user123", 
                 RoleId = userRole.Id 
             }
         };
@@ -93,29 +92,24 @@ public class DbInitializer
             
             cities.Add(city);}
         context.Cities.AddRange(cities);
-        context.SaveChanges(); // Zapisz miasta, aby uzyskać ID
+        context.SaveChanges(); 
     }
 
     private static void SeedDataFromFiles(AppDbContext context)
     {
         var dataService = new GeneringDataService();
         
-        // Załaduj typy stóp procentowych
         SeedInterestRateTypes(context);
         
-        // Załaduj dane populacji
         LoadPopulationData(context, dataService);
         
-        // Załaduj dane o cenach mieszkań
         LoadFlatPricesData(context, dataService);
         
-        // Załaduj stopy procentowe
         LoadInterestRatesData(context, dataService);
     }
 
     private static void SeedInterestRateTypes(AppDbContext context)
     {
-        // Sprawdź czy typy już istnieją
         if (context.TypeOfInterestRates.Any())
             return;
             
@@ -127,7 +121,7 @@ public class DbInitializer
         };
         
         context.TypeOfInterestRates.AddRange(types);
-        context.SaveChanges(); // Zapisz typy, aby uzyskać ID
+        context.SaveChanges(); 
     }
 
     private static void LoadPopulationData(AppDbContext context, GeneringDataService dataService)
@@ -165,7 +159,6 @@ public class DbInitializer
            
             if (city == null) continue;
             
-            // Dodaj dane populacji dla każdego roku
             var years = new Dictionary<int, string>
             {
                 { 2015, row.Year2015 },
@@ -229,7 +222,6 @@ public class DbInitializer
                 if (city == null || !double.TryParse(cityPrice.Value?.Replace(",", "."), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double priceValue)) 
                     continue;
                 
-                // Parse Roman numeral quarters (I, II, III, IV) to integer (1, 2, 3, 4)
                 int quarter = price.Kwartal switch
                 {
                     "I" => 1,
@@ -271,7 +263,6 @@ public class DbInitializer
             var lomType = types.First(t => t.Name == "LOM");
             var redType = types.First(t => t.Name == "RED");
             
-            // Konwersja DateTime na UTC
             var utcDate = rate.ObowiazujeOd.Kind == DateTimeKind.Unspecified 
                 ? DateTime.SpecifyKind(rate.ObowiazujeOd, DateTimeKind.Utc)
                 : rate.ObowiazujeOd.ToUniversalTime();
@@ -281,7 +272,7 @@ public class DbInitializer
                 new InterestRate 
                 { 
                     TypeOfInterestRateId = refType.Id, 
-                    Rate = (int)(rate.Ref * 100), // Konwersja na całkowitą wartość procentową
+                    Rate = (int)(rate.Ref * 100), 
                     Date = utcDate 
                 },
                 new InterestRate 

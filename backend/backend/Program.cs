@@ -6,7 +6,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using backend.Services;
 var builder = WebApplication.CreateBuilder(args);
+
+// Konfiguracja AppContext dla UTC
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", false);
 
 // Konfiguracja połączenia z bazą danych
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

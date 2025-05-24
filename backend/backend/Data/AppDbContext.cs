@@ -17,6 +17,18 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         base.OnModelCreating(modelBuilder);
         
+        // Konfiguracja dla PostgreSQL - wszystkie DateTime jako UTC
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var property in entityType.GetProperties())
+            {
+                if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
+                {
+                    property.SetColumnType("timestamp with time zone");
+                }
+            }
+        }
+        
         // Konfiguracja relacji
         modelBuilder.Entity<User>()
             .HasOne(u => u.Role)

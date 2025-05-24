@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Xml.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
-
+namespace backend.Services;
 public class GeneringDataService
 {
     private const string PopulationFilePath = "./DataFiles/LiczbaLudnosci.csv";

@@ -38,8 +38,16 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
-        context.Database.EnsureCreated();
-        context.Database.Migrate();
+        
+        if (context.Database.CanConnect() && context.Database.GetAppliedMigrations().Any())
+        {
+            Console.WriteLine("Database already exists with migrations, skipping migration.");
+        }
+        else
+        {
+            context.Database.Migrate();
+        }
+        
         DbInitializer.Initialize(context);
     }
     catch (Exception ex)
@@ -49,7 +57,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Konfiguracja middleware
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -59,7 +66,6 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.MapControllers();
 
-// Endpoint główny
 app.MapGet("/", ([FromServices] GeneringDataService dataService) =>
 {
     var populationData = dataService.LoadPopulationData();
@@ -74,30 +80,4 @@ app.MapGet("/", ([FromServices] GeneringDataService dataService) =>
     });
 });
 
-// Endpoint do prognozy pogody
-app.MapGet("/w", () =>
-{
-    var summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

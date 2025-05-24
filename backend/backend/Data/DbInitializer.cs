@@ -1,24 +1,44 @@
-namespace backend.Data;
 using Microsoft.EntityFrameworkCore;
 using backend.Models;
 using backend.Services;
 using System.Runtime.InteropServices.Marshalling;
 
+namespace backend.Data;
+
 public class DbInitializer
 {
     public static void Initialize(AppDbContext context)
     {
-        context.Database.Migrate();
+        try
+        {
+            // Ensure database exists and apply pending migrations
+            context.Database.Migrate();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Migration warning: {ex.Message}");
+            // Continue if tables already exist
+        }
 
+        // Check if data already exists
         if (context.Cities.Any())
+        {
+            Console.WriteLine("Database already seeded, skipping initialization.");
             return;
+        }
 
-       SeedRoles(context);
-       SeedUsers(context);
+        Console.WriteLine("Starting database seeding...");
+        SeedRoles(context);
+        context.SaveChanges(); // Save roles first so we can reference them
+        
+        SeedUsers(context);
         SeedCities(context);
+        context.SaveChanges(); // Save users and cities
+        
         SeedDataFromFiles(context);
         
-        context.SaveChanges();
+        context.SaveChanges(); // Final save
+        Console.WriteLine("Database seeding completed successfully.");
     }
 
     private static void SeedRoles(AppDbContext context)
@@ -30,7 +50,6 @@ public class DbInitializer
         };
         
         context.Roles.AddRange(roles);
-        context.SaveChanges(); 
     }
 
     private static void SeedUsers(AppDbContext context)
@@ -40,16 +59,17 @@ public class DbInitializer
         
         var users = new[]
         {
-            new User 
-            { 
-                Email = "admin@example.com", 
-                Password = "admin123",
+            new User
+            {
+                Email = "admin@example.com",
+                PasswordHash = "admin123",
                 RoleId = adminRole.Id 
+                
             },
             new User 
             { 
                 Email = "user@example.com", 
-                Password = "user123", 
+                PasswordHash = "user123", 
                 RoleId = userRole.Id 
             }
         };

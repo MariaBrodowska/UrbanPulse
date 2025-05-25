@@ -39,6 +39,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<PopulationService>();
 builder.Services.AddScoped<InterestRatesService>();
+builder.Services.AddScoped<MeterDataService>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

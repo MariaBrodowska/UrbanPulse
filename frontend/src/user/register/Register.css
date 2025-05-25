@@ -11,7 +11,6 @@
     --bg-200: #1f2b3e;
     --bg-300: #374357;
 }
-
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -30,14 +29,14 @@ body {
     width: 100%;
     display: flex;
     flex-direction: row;
-    box-sizing: border-box;
+    max-width: 1200px;
 }
 
-/* Styles for the direct children divs of #registerpage */
+
 #registerpage > div {
     box-sizing: border-box;
-    flex: 1; /* Columns take equal space*/
-    min-width: 0; /* Allow flex items to shrink below their content size */
+    flex: 1; 
+    min-width: 0;
 }
 
 
@@ -51,7 +50,6 @@ body {
 #registerpage .regdiv {
     padding: 30px 40px; 
 }
-
 #registerpage h1 {
     color: var(--primary-300);
     text-align: center;
@@ -59,27 +57,43 @@ body {
     margin-bottom: 25px;
     font-size: 2em;
 }
-
-
-#registerpage form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    height: 90%;
-}
-
 #registerpage label {
     font-weight: bold;
     color: var(--text-200);
     margin-bottom: 5px;
     font-size: 0.9em;
+    width: auto;
 }
-/* .regdiv {
+
+#registerpage form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%; 
+}
+
+#errorLabel {
+    margin-top: auto;
+    width: 100%;             
+    box-sizing: border-box; 
+    min-height: 3em; 
+    display: flex;
+    align-items: center;
+    text-align: left; 
+    color: var(--text-200);
+}
+.showAlert {
+    background-color: #a30000;
+    padding: 5px 10px; 
+}
+
+#registerpage .regdiv {
+    padding: 30px 40px;
+}
+
+#registerpage input {
     max-width: 600px;
-} */
- #registerpage input {
-    max-width: 600px;
- }
+}
 #registerpage input[type="text"],
 #registerpage input[type="password"] {
     padding: 12px 15px;
@@ -91,16 +105,12 @@ body {
     box-sizing: border-box;
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
-/* .alert #registerpage input[type="password"]  {
-    border-color: red;
-} */
 #registerpage input[type="text"]:focus,
 #registerpage input[type="password"]:focus {
     outline: none;
     border-color: var(--accent-200);
     box-shadow: 0 0 0 3px rgba(var(--accent-200-rgb, 206, 232, 255), 0.3);
 }
-
 #registerpage input[type="submit"] {
     background-color: var(--accent-100);
     color: var(--text-100);
@@ -111,9 +121,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
-    margin-top: auto;
     margin-bottom: 30px;
-    
 }
 
 #registerpage input[type="submit"]:hover {

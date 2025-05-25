@@ -127,46 +127,46 @@ public class GeneringDataService
     // Model classes
     public class PopulationRow
     {
-        public string Kod { get; set; }
-        public string Nazwa { get; set; }
-        public string Year2015 { get; set; }
-        public string Year2016 { get; set; }
-        public string Year2017 { get; set; }
-        public string Year2018 { get; set; }
-        public string Year2019 { get; set; }
-        public string Year2020 { get; set; }
-        public string Year2021 { get; set; }
-        public string Year2022 { get; set; }
-        public string Year2023 { get; set; }
-        public string Year2024 { get; set; }
+        public string Kod { get; set; } = string.Empty;
+        public string Nazwa { get; set; } = string.Empty;
+        public string Year2015 { get; set; } = string.Empty;
+        public string Year2016 { get; set; } = string.Empty;
+        public string Year2017 { get; set; } = string.Empty;
+        public string Year2018 { get; set; } = string.Empty;
+        public string Year2019 { get; set; } = string.Empty;
+        public string Year2020 { get; set; } = string.Empty;
+        public string Year2021 { get; set; } = string.Empty;
+        public string Year2022 { get; set; } = string.Empty;
+        public string Year2023 { get; set; } = string.Empty;
+        public string Year2024 { get; set; } = string.Empty;
     }
 
     public class PriceForFlat
     {
-        public string Kwartal { get; set; }
-        public string Bialystok { get; set; }
-        public string Bydgoszcz { get; set; }
-        public string Gdansk { get; set; }
-        public string Gdynia { get; set; }
-        public string Katowice { get; set; }
-        public string Kielce { get; set; }
-        public string Krakow { get; set; }
-        public string Lublin { get; set; }
-        public string Lodz { get; set; }
-        public string Olsztyn { get; set; }
-        public string Opole { get; set; }
-        public string Poznan { get; set; }
-        public string Rzeszow { get; set; }
-        public string Szczecin { get; set; }
-        public string Warszawa { get; set; }
-        public string Wroclaw { get; set; }
+        public string Kwartal { get; set; } = string.Empty;
+        public string Bialystok { get; set; } = string.Empty;
+        public string Bydgoszcz { get; set; } = string.Empty;
+        public string Gdansk { get; set; } = string.Empty;
+        public string Gdynia { get; set; } = string.Empty;
+        public string Katowice { get; set; } = string.Empty;
+        public string Kielce { get; set; } = string.Empty;
+        public string Krakow { get; set; } = string.Empty;
+        public string Lublin { get; set; } = string.Empty;
+        public string Lodz { get; set; } = string.Empty;
+        public string Olsztyn { get; set; } = string.Empty;
+        public string Opole { get; set; } = string.Empty;
+        public string Poznan { get; set; } = string.Empty;
+        public string Rzeszow { get; set; } = string.Empty;
+        public string Szczecin { get; set; } = string.Empty;
+        public string Warszawa { get; set; } = string.Empty;
+        public string Wroclaw { get; set; } = string.Empty;
     }
 
     public class FullPriceForFlat : PriceForFlat
     {
         public bool IsSecondaryMarket { get; set; }
         public bool IsRealistic { get; set; }
-        public string Year { get; set; }
+        public string Year { get; set; } = string.Empty;
     }
 
     public class InterestRate

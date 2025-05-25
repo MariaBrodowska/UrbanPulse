@@ -27,6 +27,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connect
 builder.Services.AddScoped<GeneringDataService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<PopulationService>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -66,18 +67,5 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.MapControllers();
 
-app.MapGet("/", ([FromServices] GeneringDataService dataService) =>
-{
-    var populationData = dataService.LoadPopulationData();
-    var interestRates = dataService.GetInterestRates();
-    var flatPrices = dataService.GetFlatPrices();
-    
-    return Results.Json(new
-    {
-        Population = populationData,
-        InterestRates = interestRates,
-        FlatPrices = flatPrices
-    });
-});
 
 app.Run();

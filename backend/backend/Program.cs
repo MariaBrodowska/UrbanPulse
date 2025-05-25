@@ -16,6 +16,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Konfiguracja AppContext dla UTC
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", false);
 
+//corsy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
 
 builder.Services.AddControllers();
 
@@ -64,6 +74,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors("AllowFrontend");
 app.MapControllers();
 
 app.MapGet("/", ([FromServices] GeneringDataService dataService) =>

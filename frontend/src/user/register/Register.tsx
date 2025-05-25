@@ -50,9 +50,9 @@ function RegistrationForm() {
         if(handleErrorLabel()) {
             return;
         }
-        axios.post('http://urbanpulse-backend-1:5000/register', {
-            Email: email,
-            Password: password
+        axios.post('http://localhost:5000/api/users/register', {
+            email: email,
+            password: password
         })
         .then(function (response) {
             console.log(response);

@@ -67,16 +67,17 @@ public class AuthService : IAuthService
 
     private string GenerateJwtToken(User user)
     {
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Name, user.Email),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Role, user.Role?.Name ?? "")
-        };
-
+    var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.Email),
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+    };
+        if (user.Role != null && !string.IsNullOrEmpty(user.Role.Name))
+    {
+        claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
+    }
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
         var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
@@ -84,7 +85,6 @@ public class AuthService : IAuthService
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: creds
         );
-
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Services;
 using backend.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers;
 
 [Route("api/flat-prices")]
 [ApiController]
+[Authorize]
 public class MeterDataController : ControllerBase
 {
     private readonly MeterDataService _MeterDataService;
@@ -60,6 +62,7 @@ public class MeterDataController : ControllerBase
         return Ok(meterData);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("with-city")] //dodanie danych o cenach z miastem
     public async Task<ActionResult<MeterDataDto>> AddMeterDataWithCity([FromBody] CreateMeterDataDto dto)
     {
@@ -74,6 +77,7 @@ public class MeterDataController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("")] //dodanie danych o cenach z id miasta
     public async Task<ActionResult<MeterDataDto>> AddMeterData([FromBody] CreateMeterDataWithCityIdDto dto)
     {
@@ -92,6 +96,7 @@ public class MeterDataController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")] //aktualizacja danych o cenach
     public async Task<ActionResult<MeterDataDto>> UpdateMeterData(int id, [FromBody] double price)
     {
@@ -102,6 +107,7 @@ public class MeterDataController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")] //usunięcie danych o cenach
     public async Task<IActionResult> DeleteMeterData(int id)
     {

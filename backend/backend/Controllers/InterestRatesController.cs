@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Services;
 using backend.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers;
 
 [Route("api/interest-rates")]
 [ApiController]
+[Authorize]
 public class InterestRatesController : ControllerBase
 {
     private readonly InterestRatesService _interestRatesService;
@@ -48,6 +50,7 @@ public class InterestRatesController : ControllerBase
         return Ok(interestRates);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("")] //dodanie oprocentowania
     public async Task<ActionResult<InterestRateDto>> AddInterestRate([FromBody] CreateIRWithTOIRIdDto dto)
     {    
@@ -66,6 +69,7 @@ public class InterestRatesController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")] //aktualizacja oprocentowania
     public async Task<ActionResult<InterestRateDto>> UpdateInterestRate(int id, [FromBody] int rate)
     {
@@ -76,6 +80,7 @@ public class InterestRatesController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")] //usunięcie oprocentowania
     public async Task<IActionResult> DeleteInterestRate(int id)
     {

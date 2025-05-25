@@ -16,6 +16,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Konfiguracja AppContext dla UTC
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", false);
 
+//corsy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
 
 builder.Services.AddControllers();
 
@@ -27,6 +37,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connect
 builder.Services.AddScoped<GeneringDataService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<PopulationService>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -64,20 +75,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors("AllowFrontend");
 app.MapControllers();
 
-app.MapGet("/", ([FromServices] GeneringDataService dataService) =>
-{
-    var populationData = dataService.LoadPopulationData();
-    var interestRates = dataService.GetInterestRates();
-    var flatPrices = dataService.GetFlatPrices();
-    
-    return Results.Json(new
-    {
-        Population = populationData,
-        InterestRates = interestRates,
-        FlatPrices = flatPrices
-    });
-});
 
 app.Run();

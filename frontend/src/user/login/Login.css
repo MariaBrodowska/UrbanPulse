@@ -87,6 +87,13 @@ body {
 #loginpage h1 {
     font-size: 40px;
 }
+.hidden {
+    opacity: 0;
+}
+.showAlert {
+    background-color: #a30000;
+    padding: 5px 10px; 
+}
 #loginpage input[type="text"],
 #loginpage input[type="password"] {
     padding: 12px 15px;

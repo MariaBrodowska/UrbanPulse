@@ -24,13 +24,14 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - ./backend/backend:/app/backend
+      - ./backend:/app  # Poprawione mapowanie
       - ~/.nuget/packages:/root/.nuget/packages
     ports:
       - "5000:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=true
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
     depends_on:
       - postgres
     networks:
@@ -70,8 +71,6 @@ services:
 volumes:
   postgres-data:
   pgadmin-data:
-  backend-obj:
-  backend-bin:
 
 networks:
   app-network:

@@ -26,7 +26,6 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials());
 });
-
 builder.Services.AddControllers();
 
 //polaczenie z baza
@@ -38,6 +37,8 @@ builder.Services.AddScoped<GeneringDataService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<PopulationService>();
+builder.Services.AddScoped<ExportingToXmlService>();
+builder.Services.AddScoped<ExportToJsonService>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

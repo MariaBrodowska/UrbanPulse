@@ -6,7 +6,7 @@ using backend.Services;
 
 namespace backend.Controllers
 {
-    [Route("api/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class UsersController : ControllerBase
 {
@@ -34,7 +34,16 @@ public class UsersController : ControllerBase
         if (token == null)
             return Unauthorized("Nieprawidłowy adres e-mail lub hasło.");
 
-        return Ok(new { Token = token });
+        // return Ok(new { Token = token });
+        Response.Cookies.Append("jwt", token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTimeOffset.UtcNow.AddDays(7)
+        });
+
+        return Ok(new { message = "Zalogowano" });
     }
 }
 

@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Services; 
 using backend.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,9 +41,44 @@ builder.Services.AddScoped<GeneringDataService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<PopulationService>();
+builder.Services.AddScoped<InterestRatesService>();
+builder.Services.AddScoped<MeterDataService>();
 builder.Services.AddScoped<ExportingToXmlService>();
 builder.Services.AddScoped<ExportToJsonService>();
 builder.Services.AddOpenApi();
+
+//jwt authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var token = context.Request.Cookies["token"];
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Token = token;
+                }
+                return Task.CompletedTask;
+            }
+        };
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            RoleClaimType = ClaimTypes.Role,
+
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+            )
+        };
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -77,6 +116,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("AllowFrontend");
+app.UseAuthentication();
+app.UseAuthorization(); 
+
 app.MapControllers();
 
 

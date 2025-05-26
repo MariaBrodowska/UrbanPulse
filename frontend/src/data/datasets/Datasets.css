@@ -1,0 +1,169 @@
+/* Datasets.css */
+
+/* Re-declare root variables for clarity, though they should be globally available if defined elsewhere */
+:root {
+    --primary-100: #1F3A5F;
+    --primary-200: #4d648d;
+    --primary-300: #acc2ef;
+    --accent-100: #3D5A80;
+    --accent-200: #cee8ff;
+    --text-100: #FFFFFF;
+    --text-200: #e0e0e0;
+    --bg-100: #0F1C2E;
+    --bg-200: #1f2b3e;
+    --bg-300: #374357;
+}
+
+/* Apply general body styles if this CSS is the primary stylesheet.
+   If you have a global stylesheet with these, you might not need them here again. */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-100);
+    color: var(--text-100);
+    display: flex; /* Helps in centering #datasetsdiv if it has a max-width */
+    justify-content: center;
+    align-items: flex-start; /* Align to top for a page that might scroll */
+    min-height: 100vh;
+    padding-top: 20px; /* Add some space at the top */
+    box-sizing: border-box;
+}
+#root {
+    width: 100%;
+}
+#datasetsdiv {
+    background-color: var(--bg-200);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 1400px; /* Max width for the datasets page */
+    margin: 0 auto; /* Center the div */
+    display: flex;
+    flex-direction: column; /* Menu on the left, display on the right */
+    min-height: 80vh; /* Give it some substantial height */
+    overflow: hidden; /* Prevent box shadow from being clipped by children's overflow */
+}
+
+#datasetmenu {
+    flex: 0 0 250px; /* Fixed width for the menu */
+    background-color: var(--bg-300);
+    padding: 20px;
+    border-right: 1px solid var(--primary-100);
+    color: var(--text-200);
+    /* Placeholder content styling */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+}
+
+
+#datasetdisplay {
+    flex: 1; /* Takes remaining space */
+    padding: 20px;
+    overflow-x: auto; /* Crucial for wide tables */
+}
+
+#datasetdisplay h1 { /* If you add a title inside datasetdisplay */
+    color: var(--primary-300);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 2em;
+}
+
+#datasetdisplay table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--bg-200); /* Base background for the table area if different from #datasetdisplay */
+    color: var(--text-100);
+    font-size: 0.9em;
+    border-radius: 5px; /* Subtle rounding for the table itself if it doesn't fill the container */
+    overflow: hidden; /* To make border-radius work on table */
+}
+
+#datasetdisplay th,
+#datasetdisplay td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid var(--primary-200); /* Softer borders for cells */
+}
+
+#datasetdisplay th {
+    background-color: var(--primary-100);
+    color: var(--text-100);
+    font-weight: bold;
+    border-bottom: 2px solid var(--accent-100); /* Stronger border for header bottom */
+    position: sticky; /* Make headers stick on vertical scroll, if #datasetdisplay has a fixed height and overflow-y: auto */
+    top: 0; /* Required for sticky */
+    z-index: 1; /* Ensure header is above scrolling content */
+}
+
+#datasetdisplay tr {
+    border-bottom: 1px solid var(--primary-200);
+}
+
+#datasetdisplay tr:nth-child(even) {
+    background-color: var(--bg-300); /* Zebra striping for rows */
+}
+
+#datasetdisplay tr:last-child td {
+    border-bottom: none; /* Optional: remove border from last row cells if table has outer border */
+}
+
+#datasetdisplay tr:hover td {
+    background-color: var(--accent-100);
+    color: var(--text-100); /* Ensure text remains readable */
+    cursor: default; /* Or pointer if rows are interactive */
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 900px) { /* Adjust breakpoint as needed */
+    #datasetsdiv {
+        flex-direction: column;
+        width: 95%;
+        min-height: auto; /* Allow height to adjust to content */
+    }
+
+    #datasetmenu {
+        flex: 0 0 auto; /* Reset flex basis */
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--primary-100);
+        min-height: 100px; /* Give some minimum height to the menu */
+        text-align: center;
+    }
+     #datasetmenu::before {
+        content: "Menu"; /* Shorter text for mobile */
+    }
+
+    #datasetdisplay {
+        padding: 15px; /* Slightly reduce padding on smaller screens */
+    }
+
+    #datasetdisplay th,
+    #datasetdisplay td {
+        padding: 10px 12px; /* Reduce cell padding */
+        font-size: 0.85em; /* Slightly smaller font for table content */
+    }
+}
+
+@media screen and (max-width: 600px) {
+    body {
+        padding-top: 10px;
+    }
+    #datasetsdiv {
+        width: 100%;
+        border-radius: 0; /* Full width, no radius */
+        margin: 0;
+    }
+
+    #datasetdisplay {
+        padding: 10px;
+    }
+    #datasetdisplay th,
+    #datasetdisplay td {
+        padding: 8px 10px;
+        font-size: 0.8em;
+    }
+}

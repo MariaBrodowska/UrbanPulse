@@ -159,7 +159,7 @@ body {
 }
 
 /* Styling for text and number inputs within the forms */
-#datasetmenu form input[type="text"],
+input[type="text"],
 #datasetmenu form input[type="number"] {
     padding: 10px 12px;
     border-radius: 4px;
@@ -212,8 +212,28 @@ body {
 #datasetmenu form input[type="submit"]:hover {
     background-color: var(--accent-200); /* Assumes --accent-200 is a slightly different shade for hover */
 }
-
-
+#exports {
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.exportlink {
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    background-color: var(--accent-100);
+    color: var(--bg-100); /* Assumes --accent-100 is dark and --bg-100 is light for good contrast */
+    font-weight: bold;
+    font-size: 1em;
+    font-style: normal; /* Override italic from #datasetmenu */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    align-self: flex-start; /* Button does not stretch to full width by default in a flex column */
+}
+.exportlink:hover {
+    background-color: var(--accent-200); /* Assumes --accent-200 is a slightly different shade for hover */
+}
 @media screen and (max-width: 900px) {
     #datasetsdiv {
         flex-direction: column;

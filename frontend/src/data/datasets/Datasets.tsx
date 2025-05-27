@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import "./Datasets.css"
 import GetFilters from "./Filters"
 import axios from "axios"
@@ -41,12 +42,10 @@ function RenderTable(props: { objects: Object[] }) {
         })}</tbody>
     </table>
 }
-
 function DisplayDatasetsPage() {
     const [isLoading, setLoading] = React.useState(true);
     const s: Object[] = []
     const [data, setData] = React.useState<Object[]>(s); // Explicitly type useState
-
     const handleData = (url: string) => {
         setLoading(true)
         axios.get(url, {withCredentials:true})
@@ -72,19 +71,19 @@ function DisplayDatasetsPage() {
     }, []); // Empty dependency array means this runs once on mount
 
     let filters = new Map<string, string[]>();
-    filters.set("Population",
+    filters.set("populations",
         ["No Filters",
             "ID",
             "By Year",
             "By City",
         ]);
-    filters.set("InterestRates",
+    filters.set("interestrates",
         ["No Filters",
             "ID",
             "By Year",
             "By Year Range",
         ]);
-    filters.set("MeterData",
+    filters.set("meterdata",
         ["No Filters",
             "ID",
             "By Market",
@@ -96,7 +95,7 @@ function DisplayDatasetsPage() {
     const [value2, setValue2] = React.useState("");
 
     let callbackList = new Map<string, (() => ReactNode)[]>();
-    callbackList.set("Population", [
+    callbackList.set("populations", [
         () => {
             return <div>
                 <p>No Filter</p>
@@ -133,7 +132,7 @@ function DisplayDatasetsPage() {
             </div>
         }
     ])
-    callbackList.set("InterestRates", [
+    callbackList.set("interestrates", [
         () => {
             return <div>
                 <p>No Filter</p>
@@ -171,7 +170,7 @@ function DisplayDatasetsPage() {
             </div>
         }
     ])
-    callbackList.set("MeterData", [
+    callbackList.set("meterdata", [
         () => {
             return <div>
                 <p>No Filter</p>
@@ -223,7 +222,12 @@ function DisplayDatasetsPage() {
             </div>
         },
     ])
-    const [currentDataset, setCurrentDataset] = React.useState("Population");
+    
+    const [currentDataset, setCurrentDataset] = React.useState("populations");
+    const [fileName, setFileName] = React.useState("data");
+    const handleExport = (url: string): string => {
+        return url + "?tableName=" + currentDataset + "&fileName=" + fileName;
+    }
     if (isLoading) {
         return <div><p>Loading..</p></div>
     } else {
@@ -236,15 +240,17 @@ function DisplayDatasetsPage() {
                     <div>
                         <h3>Current dataset</h3>
                         <select value={currentDataset} id="datasetselect" onChange={(event) => { setCurrentDataset(event.target.value) }}>
-                            <option value="Population">Population</option>
-                            <option value="InterestRates">Interest Rates</option>
-                            <option value="MeterData">Meter Data</option>
+                            <option value="populations">Population</option>
+                            <option value="interestrates">Interest Rates</option>
+                            <option value="meterdata">Flat Prices</option>
                         </select>
                     </div>
                     <GetFilters filterlist={filters.get(currentDataset)} callbacks={callbackList.get(currentDataset)} />
-                    <div>
+                    <div id="exports">
                         <h3>Export</h3>
-
+                        <input type="text" value={fileName} onChange={(event) => {setFileName(event.target.value)}} placeholder="filename"></input>
+                        <Link to={handleExport("http://localhost:5000/api/export/singleTableFile")} className="exportlink">Export to XML</Link>
+                        <Link to={handleExport("http://localhost:5000/api/exportjson/singleTableFile")} className="exportlink">Export to JSON</Link>
                     </div>
                 </div>
                 <div id="datasetdisplay">

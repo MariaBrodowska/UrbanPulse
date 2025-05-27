@@ -19,7 +19,9 @@ body {
     flex: 1; /* Columns take equal space*/
     min-width: 0; /* Allow flex items to shrink below their content size */
 }
-
+.hidden {
+    opacity: 0;
+}
 
 .imgdiv .logimg { /* Targeting the image by its class within .imgdiv */
     width: 100%;

@@ -21,7 +21,7 @@ function LoginForm() {
         .then(function (response) {
             setErrorVisibility("hidden")
             setErrorLabel("Success")
-            navigate("/");
+            navigate("/datasets");
         })
         .catch(function (error) {
             setErrorLabel(error.response.data)

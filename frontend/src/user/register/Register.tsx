@@ -2,12 +2,14 @@ import "./Register.css"
 import registerImage from "../../assets/graph.webp"
 import React from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 function RegistrationForm() {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [password2, setPassword2] = React.useState('');
     const [errorlabel, setErrorLabel] = React.useState('Click the button below to register')
     const [errorVisible, setErrorVisibility] = React.useState('')
+    const navigate = useNavigate();
     const checkPassword = (target: HTMLInputElement) => {
         setPassword2(target.value)
         if (target.value != password || target.value == "") {
@@ -54,11 +56,15 @@ function RegistrationForm() {
             email: email,
             password: password
         })
-        .then(function (response) {
-            console.log(response);
+       .then(function (response) {
+            setErrorVisibility("")
+            setErrorLabel("Success")
+            navigate("/login");
         })
         .catch(function (error) {
-            console.log(error);
+            const err: string = JSON.stringify(error.response.data.errors)
+            setErrorLabel(err)
+            setErrorVisibility("showAlert")
         });
     }
 

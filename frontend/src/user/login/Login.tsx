@@ -2,12 +2,13 @@ import React from "react";
 import "./Login.css"
 import registerImage from "../../assets/graph.webp"
 import axios from "axios";
-import { Link } from "react-router-dom";
-import { TokenContext, type TokenContextType } from "./Token";
+import { Link, useNavigate } from "react-router-dom";
 function LoginForm() {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const {token, overwriteToken} = React.useContext(TokenContext) as TokenContextType;
+    const [errorlabel, setErrorLabel] = React.useState('Error')
+    const [errorVisible, setErrorVisibility] = React.useState('hidden')
+    const navigate = useNavigate();
     const LoginHandleSumbit = (event: React.SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (email == "" || password == "") {
@@ -17,31 +18,31 @@ function LoginForm() {
             email: email,
             password: password
         })
-            .then(function (response) {
-                console.log(response);
-                console.log(response.data.token)
-                overwriteToken(response.data.token)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        .then(function (response) {
+            setErrorVisibility("hidden")
+            setErrorLabel("Success")
+            navigate("/datasets");
+        })
+        .catch(function (error) {
+            setErrorLabel(error.response.data)
+            setErrorVisibility("showAlert")
+        });
 
     }
     return (
 
         <form onSubmit={LoginHandleSumbit}>
+            <p className={errorVisible}>{errorlabel}</p>
             <label htmlFor="emailInput">Email</label>
             <input type="text" id="emailInput" value={email} onChange={(event) => { setEmail(event.target.value) }} />
             <label htmlFor="passwordInput">Password</label>
             <input type="password" id="passwordInput" value={password} onChange={(event) => { setPassword(event.target.value) }} />
             <input type="submit" value="Login" />
-            <label>{token.token}</label>
         </form>
     )
 }
 
 function DisplayLoginPage() {
-
     return <div id="loginpage">
         <div className="imgdiv">
             <img src={registerImage} className="logimg" alt="Login Image" />

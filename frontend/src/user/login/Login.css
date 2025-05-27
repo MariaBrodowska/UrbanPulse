@@ -1,19 +1,13 @@
 body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-100);
-    color: var(--text-100);
-    display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    box-sizing: border-box;
 }
+
 #loginpage {
     background-color: var(--bg-200);
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     width: 100%;
+    max-width: 1300px;
     display: flex;
     flex-direction: row;
     box-sizing: border-box;
@@ -73,13 +67,6 @@ body {
 }
 #loginpage h1 {
     font-size: 40px;
-}
-.hidden {
-    opacity: 0;
-}
-.showAlert {
-    background-color: #a30000;
-    padding: 5px 10px; 
 }
 #loginpage input[type="text"],
 #loginpage input[type="password"] {

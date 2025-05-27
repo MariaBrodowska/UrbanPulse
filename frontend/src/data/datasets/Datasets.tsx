@@ -78,16 +78,15 @@ function DisplayDatasetsPage() {
             "By Year",
             "By City",
         ]);
-    filters.set("InterestRates", 
+    filters.set("InterestRates",
         ["No Filters",
             "ID",
             "By Year",
             "By Year Range",
         ]);
-    filters.set("MeterData", 
+    filters.set("MeterData",
         ["No Filters",
             "ID",
-            "By Year",
             "By Market",
             "By Sales",
             "By City"
@@ -96,8 +95,6 @@ function DisplayDatasetsPage() {
     const [value, setValue] = React.useState("");
     const [value2, setValue2] = React.useState("");
 
-    // Define callbacks directly in the component body
-    // They will be re-created on each render, capturing the current 'value'
     let callbackList = new Map<string, (() => ReactNode)[]>();
     callbackList.set("Population", [
         () => {
@@ -196,7 +193,10 @@ function DisplayDatasetsPage() {
             return <div>
                 <p>Filter By Market</p>
                 <form id="filterform2" onSubmit={(event) => { event.preventDefault(); handleData("http://localhost:5000/api/flat-prices/by-market/" + value) }}>
-                    <input type="checkbox" id="filterMarket" checked={value == "true" ? true : false} onChange={(event) => { setValue(value ? "false" : "true") }} />
+                    <div>
+                        <input type="checkbox" id="filterMarket" checked={value == "true" ? true : false} onChange={(event) => { setValue(value ? "false" : "true") }} />
+                        <label htmlFor="filterMarket">Is market secondary?</label>
+                    </div>
                     <input type="submit" value="Submit" />
                 </form>
             </div>
@@ -205,7 +205,10 @@ function DisplayDatasetsPage() {
             return <div>
                 <p>Filter By Sales</p>
                 <form id="filterform3" onSubmit={(event) => { event.preventDefault(); handleData("http://localhost:5000/api/flat-prices/by-sales/" + value) }}>
-                    <input type="checkbox" id="filterSales" checked={value == "true" ? true : false} onChange={(event) => { setValue(value ? "false" : "true") }} />
+                    <div>
+                        <input type="checkbox" id="filterSales" checked={value == "true" ? true : false} onChange={(event) => { setValue(value ? "false" : "true") }} />
+                        <label htmlFor="filterSales">Are prices realistic?</label>
+                    </div>
                     <input type="submit" value="Submit" />
                 </form>
             </div>
@@ -227,12 +230,22 @@ function DisplayDatasetsPage() {
         return (
             <div id="datasetsdiv">
                 <div id="datasetmenu">
-                    <select value={currentDataset} id="datasetselect" onChange={(event) => {setCurrentDataset(event.target.value)}}>
-                        <option value="Population">Population</option>
-                        <option value="InterestRates">Interest Rates</option>
-                        <option value="MeterData">Meter Data</option>
-                    </select>
+                    <div id="datasetmenutitle">
+                        <h1>Datasets</h1>
+                    </div>
+                    <div>
+                        <h3>Current dataset</h3>
+                        <select value={currentDataset} id="datasetselect" onChange={(event) => { setCurrentDataset(event.target.value) }}>
+                            <option value="Population">Population</option>
+                            <option value="InterestRates">Interest Rates</option>
+                            <option value="MeterData">Meter Data</option>
+                        </select>
+                    </div>
                     <GetFilters filterlist={filters.get(currentDataset)} callbacks={callbackList.get(currentDataset)} />
+                    <div>
+                        <h3>Export</h3>
+
+                    </div>
                 </div>
                 <div id="datasetdisplay">
                     <RenderTable objects={data} />
@@ -242,4 +255,3 @@ function DisplayDatasetsPage() {
     }
 }
 export default DisplayDatasetsPage;
-//<select value={currentDataset} onChange={}></select>

@@ -12,8 +12,8 @@ function RenderOptions(props: { options: string[] }) {
 
 // Props definition for GetFilters
 interface GetFiltersProps {
-    filterlist: string[];
-    callbacks: (() => ReactNode)[]; // Array of functions that return ReactNode
+    filterlist: string[] | undefined;
+    callbacks: (() => ReactNode)[] | undefined; // Array of functions that return ReactNode
     // Optional: callback to notify parent when filter type changes,
     // if parent needs to reset its 'value' state.
     // onFilterTypeChange?: () => void;
@@ -23,7 +23,7 @@ function GetFilters(props: GetFiltersProps) {
     const { filterlist, callbacks /*, onFilterTypeChange */ } = props;
 
     // Guard clause for loading/empty state
-    if (filterlist === undefined || filterlist.length === 0 || callbacks.length === 0 || filterlist.length !== callbacks.length) {
+    if (filterlist === undefined || callbacks === undefined || filterlist.length === 0 || callbacks.length === 0 || filterlist.length !== callbacks.length) {
         // Added check for callbacks length and consistency
         return <div><p>Loading filters or filter data is inconsistent...</p></div>;
     }
@@ -77,7 +77,6 @@ function GetFilters(props: GetFiltersProps) {
         //    setSelectedFilterLabel(filterlist[0]); // This would trigger another re-render
         // }
     }
-
     return (
         <div className="filter">
             <div className="pickfilter">

@@ -49,7 +49,7 @@ function DisplayDatasetsPage() {
 
     const handleData = (url: string) => {
         setLoading(true)
-        axios.get(url, {})
+        axios.get(url, {withCredentials:true})
             .then((response) => {
                 if (Array.isArray(response.data)) {
                     setData(response.data)

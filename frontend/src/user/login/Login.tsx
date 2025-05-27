@@ -17,7 +17,7 @@ function LoginForm() {
         axios.post('http://localhost:5000/api/users/login', {
             email: email,
             password: password
-        })
+        }, {withCredentials:true})
         .then(function (response) {
             setErrorVisibility("hidden")
             setErrorLabel("Success")

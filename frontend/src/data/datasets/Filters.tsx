@@ -79,6 +79,7 @@ function GetFilters(props: GetFiltersProps) {
     }
     return (
         <div className="filter">
+            <h3>Filter</h3>
             <div className="pickfilter">
                 <FilterSelectorDropdown />
             </div>

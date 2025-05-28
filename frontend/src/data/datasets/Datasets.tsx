@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import "./Datasets.css"
 import GetFilters from "./Filters"
 import axios from "axios"
@@ -41,12 +42,10 @@ function RenderTable(props: { objects: Object[] }) {
         })}</tbody>
     </table>
 }
-
 function DisplayDatasetsPage() {
     const [isLoading, setLoading] = React.useState(true);
     const s: Object[] = []
     const [data, setData] = React.useState<Object[]>(s); // Explicitly type useState
-
     const handleData = (url: string) => {
         setLoading(true)
         axios.get(url, {withCredentials:true})
@@ -72,22 +71,21 @@ function DisplayDatasetsPage() {
     }, []); // Empty dependency array means this runs once on mount
 
     let filters = new Map<string, string[]>();
-    filters.set("Population",
+    filters.set("populations",
         ["No Filters",
             "ID",
             "By Year",
             "By City",
         ]);
-    filters.set("InterestRates", 
+    filters.set("interestrates",
         ["No Filters",
             "ID",
             "By Year",
             "By Year Range",
         ]);
-    filters.set("MeterData", 
+    filters.set("meterdata",
         ["No Filters",
             "ID",
-            "By Year",
             "By Market",
             "By Sales",
             "By City"
@@ -96,10 +94,8 @@ function DisplayDatasetsPage() {
     const [value, setValue] = React.useState("");
     const [value2, setValue2] = React.useState("");
 
-    // Define callbacks directly in the component body
-    // They will be re-created on each render, capturing the current 'value'
     let callbackList = new Map<string, (() => ReactNode)[]>();
-    callbackList.set("Population", [
+    callbackList.set("populations", [
         () => {
             return <div>
                 <p>No Filter</p>
@@ -136,7 +132,7 @@ function DisplayDatasetsPage() {
             </div>
         }
     ])
-    callbackList.set("InterestRates", [
+    callbackList.set("interestrates", [
         () => {
             return <div>
                 <p>No Filter</p>
@@ -174,7 +170,7 @@ function DisplayDatasetsPage() {
             </div>
         }
     ])
-    callbackList.set("MeterData", [
+    callbackList.set("meterdata", [
         () => {
             return <div>
                 <p>No Filter</p>
@@ -196,7 +192,10 @@ function DisplayDatasetsPage() {
             return <div>
                 <p>Filter By Market</p>
                 <form id="filterform2" onSubmit={(event) => { event.preventDefault(); handleData("http://localhost:5000/api/flat-prices/by-market/" + value) }}>
-                    <input type="checkbox" id="filterMarket" checked={value == "true" ? true : false} onChange={(event) => { setValue(value ? "false" : "true") }} />
+                    <div>
+                        <input type="checkbox" id="filterMarket" checked={value == "true" ? true : false} onChange={(event) => { setValue(value ? "false" : "true") }} />
+                        <label htmlFor="filterMarket">Is market secondary?</label>
+                    </div>
                     <input type="submit" value="Submit" />
                 </form>
             </div>
@@ -205,7 +204,10 @@ function DisplayDatasetsPage() {
             return <div>
                 <p>Filter By Sales</p>
                 <form id="filterform3" onSubmit={(event) => { event.preventDefault(); handleData("http://localhost:5000/api/flat-prices/by-sales/" + value) }}>
-                    <input type="checkbox" id="filterSales" checked={value == "true" ? true : false} onChange={(event) => { setValue(value ? "false" : "true") }} />
+                    <div>
+                        <input type="checkbox" id="filterSales" checked={value == "true" ? true : false} onChange={(event) => { setValue(value ? "false" : "true") }} />
+                        <label htmlFor="filterSales">Are prices realistic?</label>
+                    </div>
                     <input type="submit" value="Submit" />
                 </form>
             </div>
@@ -220,19 +222,36 @@ function DisplayDatasetsPage() {
             </div>
         },
     ])
-    const [currentDataset, setCurrentDataset] = React.useState("Population");
+    
+    const [currentDataset, setCurrentDataset] = React.useState("populations");
+    const [fileName, setFileName] = React.useState("data");
+    const handleExport = (url: string): string => {
+        return url + "?tableName=" + currentDataset + "&fileName=" + fileName;
+    }
     if (isLoading) {
         return <div><p>Loading..</p></div>
     } else {
         return (
             <div id="datasetsdiv">
+                <div id="datasetmenutitle">
+                        <h1>Datasets</h1>
+                    </div>
                 <div id="datasetmenu">
-                    <select value={currentDataset} id="datasetselect" onChange={(event) => {setCurrentDataset(event.target.value)}}>
-                        <option value="Population">Population</option>
-                        <option value="InterestRates">Interest Rates</option>
-                        <option value="MeterData">Meter Data</option>
-                    </select>
+                    <div>
+                        <h3>Current dataset</h3>
+                        <select value={currentDataset} id="datasetselect" onChange={(event) => { setCurrentDataset(event.target.value) }}>
+                            <option value="populations">Population</option>
+                            <option value="interestrates">Interest Rates</option>
+                            <option value="meterdata">Flat Prices</option>
+                        </select>
+                    </div>
                     <GetFilters filterlist={filters.get(currentDataset)} callbacks={callbackList.get(currentDataset)} />
+                    <div id="exports">
+                        <h3>Export</h3>
+                        <input type="text" value={fileName} onChange={(event) => {setFileName(event.target.value)}} placeholder="filename"></input>
+                        <Link to={handleExport("http://localhost:5000/api/export/file")} className="exportlink">Export to XML</Link>
+                        <Link to={handleExport("http://localhost:5000/api/exportjson/file")} className="exportlink">Export to JSON</Link>
+                    </div>
                 </div>
                 <div id="datasetdisplay">
                     <RenderTable objects={data} />
@@ -242,4 +261,3 @@ function DisplayDatasetsPage() {
     }
 }
 export default DisplayDatasetsPage;
-//<select value={currentDataset} onChange={}></select>

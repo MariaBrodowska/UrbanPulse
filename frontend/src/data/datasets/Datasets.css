@@ -1,7 +1,6 @@
 /* Datasets.css */
 
-/* Apply general body styles if this CSS is the primary stylesheet.
-   If you have a global stylesheet with these, you might not need them here again. */
+
 body {
     align-items: flex-start; 
 }
@@ -10,21 +9,21 @@ body {
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     width: 90%;
-    max-width: 1400px; /* Max width for the datasets page */
-    margin: 0 auto; /* Center the div */
+    max-width: 1400px; 
+    margin: 0 auto;
     display: flex;
-    flex-direction: column; /* Menu on the left, display on the right */
-    min-height: 80vh; /* Give it some substantial height */
-    overflow: hidden; /* Prevent box shadow from being clipped by children's overflow */
+    flex-direction: column; 
+    min-height: 80vh; 
+    overflow: hidden; 
 }
 
 #datasetmenu {
-    flex: 0 0 250px; /* Fixed width for the menu */
+    flex: 0 0 250px;
     background-color: var(--bg-300);
     padding: 20px;
     border-right: 1px solid var(--primary-100);
     color: var(--text-200);
-    /* Placeholder content styling */
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,12 +32,12 @@ body {
 
 
 #datasetdisplay {
-    flex: 1; /* Takes remaining space */
+    flex: 1; 
     padding: 20px;
-    overflow-x: auto; /* Crucial for wide tables */
+    overflow-x: auto; 
 }
 
-#datasetdisplay h1 { /* If you add a title inside datasetdisplay */
+#datasetdisplay h1 { 
     color: var(--primary-300);
     text-align: center;
     margin-top: 0;
@@ -49,28 +48,28 @@ body {
 #datasetdisplay table {
     width: 100%;
     border-collapse: collapse;
-    background-color: var(--bg-200); /* Base background for the table area if different from #datasetdisplay */
+    background-color: var(--bg-200); 
     color: var(--text-100);
     font-size: 0.9em;
-    border-radius: 5px; /* Subtle rounding for the table itself if it doesn't fill the container */
-    overflow: hidden; /* To make border-radius work on table */
+    border-radius: 5px; 
+    overflow: hidden; 
 }
 
 #datasetdisplay th,
 #datasetdisplay td {
     padding: 12px 15px;
     text-align: left;
-    border: 1px solid var(--primary-200); /* Softer borders for cells */
+    border: 1px solid var(--primary-200); 
 }
 
 #datasetdisplay th {
     background-color: var(--primary-100);
     color: var(--text-100);
     font-weight: bold;
-    border-bottom: 2px solid var(--accent-100); /* Stronger border for header bottom */
-    position: sticky; /* Make headers stick on vertical scroll, if #datasetdisplay has a fixed height and overflow-y: auto */
-    top: 0; /* Required for sticky */
-    z-index: 1; /* Ensure header is above scrolling content */
+    border-bottom: 2px solid var(--accent-100);
+    position: sticky; 
+    top: 0; 
+    z-index: 1; 
 }
 
 #datasetdisplay tr {
@@ -78,47 +77,206 @@ body {
 }
 
 #datasetdisplay tr:nth-child(even) {
-    background-color: var(--bg-300); /* Zebra striping for rows */
+    background-color: var(--bg-300); 
 }
 
 #datasetdisplay tr:last-child td {
-    border-bottom: none; /* Optional: remove border from last row cells if table has outer border */
+    border-bottom: none; 
 }
 
 #datasetdisplay tr:hover td {
     background-color: var(--accent-100);
-    color: var(--text-100); /* Ensure text remains readable */
-    cursor: default; /* Or pointer if rows are interactive */
+    color: var(--text-100); 
+    cursor: default; 
+}
+#datasetmenu {
+    width: 100%; /* Takes full width as a top bar */
+    background-color: var(--bg-300);
+    padding: 20px;
+    border-bottom: 1px solid var(--primary-100); /* Border for a top bar */
+    color: var(--text-200);
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: row; /* Stack dataset selector, filter type selector, and filter form vertically */
+    align-items: stretch;
+    align-content: stretch;
+    gap: 15px; /* Space between these elements */
+    font-style: italic; /* Original style for #datasetmenu, specific elements can override */
 }
 
-/* Responsive adjustments */
-@media screen and (max-width: 900px) { /* Adjust breakpoint as needed */
+/* Style for ALL select elements within the menu:
+   - The main dataset select (#datasetselect)
+   - The filter type select rendered by GetFilters component
+*/
+#datasetmenu select {
+    padding: 10px 12px;
+    border-radius: 5px;
+    border: 1px solid var(--primary-200);
+    background-color: var(--bg-100);
+    color: var(--text-100);
+    font-size: 1em;
+    font-style: normal; /* Override italic from #datasetmenu for better readability */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+#datasetmenutitle {
+    align-content: center;
+    h1 {
+        text-align: center;
+    }
+}
+
+#datasetmenu > div {
+    background-color: var(--bg-250, var(--bg-200)); /* Use --bg-250 if defined, else fallback to --bg-200 */
+    padding: 15px;
+    flex-grow: 1;
+    border-radius: 5px;
+    border: 1px solid var(--primary-100);
+    font-style: normal; /* Override italic from #datasetmenu */
+}
+
+/* Styling for the <form> elements within the callback's <div> */
+#datasetmenu div > form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Space between elements inside the form */
+}
+
+/* Styling for <p> tags that act as titles for filter sections (e.g., "Filter By ID")
+   These are either direct children of the callback's <div> or direct children of the <form>
+*/
+#datasetmenu div > p,
+#datasetmenu div > form > p {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: var(--text-100);
+    font-weight: bold;
+    font-size: 1.05em;
+    font-style: normal; /* Override italic from #datasetmenu */
+}
+
+/* Styling for text and number inputs within the forms */
+input[type="text"],
+#datasetmenu form input[type="number"] {
+    padding: 10px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--primary-200);
+    background-color: var(--bg-100);
+    color: var(--text-100);
+    font-size: 0.95em;
+    font-style: normal; /* Override italic from #datasetmenu */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Styling for checkbox inputs */
+#datasetmenu form input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px; /* Space if there's text next to it (though current HTML doesn't show this) */
+    vertical-align: middle;
+    accent-color: var(--accent-100); /* Modern way to color browser-native checkboxes */
+    font-style: normal; /* Just in case */
+}
+
+/* Optional: If you wrap checkbox and a text label for better alignment and clickability */
+/* e.g., <label class="checkbox-label-container"><input type="checkbox" /> Label Text</label> */
+#datasetmenu form .checkbox-label-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-100);
+    font-size: 0.95em;
+    font-style: normal;
+    cursor: pointer;
+}
+
+/* Styling for submit buttons */
+#datasetmenu form input[type="submit"] {
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    background-color: var(--accent-100);
+    color: var(--bg-100); /* Assumes --accent-100 is dark and --bg-100 is light for good contrast */
+    font-weight: bold;
+    font-size: 1em;
+    font-style: normal; /* Override italic from #datasetmenu */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    align-self: flex-start; /* Button does not stretch to full width by default in a flex column */
+}
+
+#datasetmenu form input[type="submit"]:hover {
+    background-color: var(--accent-200); /* Assumes --accent-200 is a slightly different shade for hover */
+}
+#exports {
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.exportlink {
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    background-color: var(--accent-100);
+    color: var(--bg-100); /* Assumes --accent-100 is dark and --bg-100 is light for good contrast */
+    font-weight: bold;
+    font-size: 1em;
+    font-style: normal; /* Override italic from #datasetmenu */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    align-self: flex-start; /* Button does not stretch to full width by default in a flex column */
+}
+.exportlink:hover {
+    background-color: var(--accent-200); /* Assumes --accent-200 is a slightly different shade for hover */
+}
+@media screen and (max-width: 900px) {
     #datasetsdiv {
         flex-direction: column;
         width: 95%;
-        min-height: auto; /* Allow height to adjust to content */
+        min-height: auto; 
     }
 
     #datasetmenu {
-        flex: 0 0 auto; /* Reset flex basis */
+        flex: 0 0 auto;
         width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--primary-100);
-        min-height: 100px; /* Give some minimum height to the menu */
+        min-height: 100px; 
         text-align: center;
     }
      #datasetmenu::before {
-        content: "Menu"; /* Shorter text for mobile */
+        content: "Menu"; 
     }
 
     #datasetdisplay {
-        padding: 15px; /* Slightly reduce padding on smaller screens */
+        padding: 15px; 
     }
 
     #datasetdisplay th,
     #datasetdisplay td {
-        padding: 10px 12px; /* Reduce cell padding */
-        font-size: 0.85em; /* Slightly smaller font for table content */
+        padding: 10px 12px;
+        font-size: 0.85em; 
+    }
+    #datasetmenu::before {
+        content: "Filter Options"; /* Or "Menu", or remove if not needed */
+        display: block;
+        font-weight: bold;
+        font-style: normal; /* Override #datasetmenu's italic */
+        margin-bottom: 10px;
+        color: var(--text-100);
+        font-size: 1.2em;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #datasetmenu form input[type="submit"] {
+        width: 100%; /* Make submit button full width on smaller screens for easier tapping */
     }
 }
 
@@ -128,7 +286,7 @@ body {
     }
     #datasetsdiv {
         width: 100%;
-        border-radius: 0; /* Full width, no radius */
+        border-radius: 0; 
         margin: 0;
     }
 
@@ -139,5 +297,28 @@ body {
     #datasetdisplay td {
         padding: 8px 10px;
         font-size: 0.8em;
+    }
+    #datasetmenu {
+        padding: 15px; /* Slightly reduce padding on very small screens */
+        gap: 10px; /* Reduce gap between elements */
+    }
+
+    #datasetmenu::before { /* "Filter Options" title */
+        font-size: 1.1em;
+        margin-bottom: 8px;
+    }
+
+    /* General reduction in padding/font for inputs in menu on small screens */
+    #datasetmenu select,
+    #datasetmenu form input[type="text"],
+    #datasetmenu form input[type="number"],
+    #datasetmenu form input[type="submit"] {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+
+    #datasetmenu div > p,
+    #datasetmenu div > form > p {
+        font-size: 1em;
     }
 }

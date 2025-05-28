@@ -1,95 +1,214 @@
-import { type ReactNode, useState, useEffect } from "react"; // Added useEffect
+import { useState } from "react";
 
-function RenderOption(props: { value: string }) {
-    return <option value={props.value}>{props.value}</option>;
-}
-
-function RenderOptions(props: { options: string[] }) {
-    return props.options.map((obj) => {
-        return <RenderOption value={obj} key={"opt" + obj} />;
-    });
-}
-
-// Props definition for GetFilters
 interface GetFiltersProps {
-    filterlist: string[] | undefined;
-    callbacks: (() => ReactNode)[] | undefined; // Array of functions that return ReactNode
-    // Optional: callback to notify parent when filter type changes,
-    // if parent needs to reset its 'value' state.
-    // onFilterTypeChange?: () => void;
+    currentDataset: string;
+    onApplyFilters: (url: string) => void;
 }
 
-function GetFilters(props: GetFiltersProps) {
-    const { filterlist, callbacks /*, onFilterTypeChange */ } = props;
+function GetFilters({ currentDataset, onApplyFilters }: GetFiltersProps) {
+    const [inputValues, setInputValues] = useState<{[key: string]: string}>({});
 
-    // Guard clause for loading/empty state
-    if (filterlist === undefined || callbacks === undefined || filterlist.length === 0 || callbacks.length === 0 || filterlist.length !== callbacks.length) {
-        // Added check for callbacks length and consistency
-        return <div><p>Loading filters or filter data is inconsistent...</p></div>;
-    }
-
-    // State to store the *label* (or name) of the currently selected filter.
-    const [selectedFilterLabel, setSelectedFilterLabel] = useState<string>(filterlist[0]);
-
-    // Effect to ensure selectedFilterLabel is valid if filterlist changes
-    useEffect(() => {
-        if (!filterlist.includes(selectedFilterLabel) && filterlist.length > 0) {
-            setSelectedFilterLabel(filterlist[0]);
-        } else if (filterlist.length === 0) {
-            setSelectedFilterLabel(""); // Handle empty filter list
+    const getAvailableFilters = (dataset: string) => {
+        switch (dataset) {
+            case "populations":
+                return [
+                    { type: "id", label: "Filtruj po ID", inputType: "text", placeholder: "Wpisz ID" },
+                    { type: "year", label: "Filtruj po roku", inputType: "number", placeholder: "np. 2023" },
+                    { type: "city", label: "Filtruj po mieście", inputType: "text", placeholder: "Nazwa miasta" }
+                ];
+            case "interestrates":
+                return [
+                    { type: "id", label: "Filtruj po ID", inputType: "text", placeholder: "Wpisz ID" },
+                    { type: "yearRange", label: "Filtruj po zakresie lat", inputType: "range", placeholder: "Od roku" }
+                ];
+            case "meterdata":
+                return [
+                    { type: "id", label: "Filtruj po ID", inputType: "text", placeholder: "Wpisz ID" },
+                    { type: "market", label: "Rynek wtórny", inputType: "toggle" },
+                    { type: "sales", label: "Ceny realistyczne", inputType: "toggle" },
+                    { type: "city", label: "Filtruj po mieście", inputType: "text", placeholder: "Nazwa miasta" }
+                ];
+            default:
+                return [];
         }
-    }, [filterlist, selectedFilterLabel]);
-
-
-    const handleFilterSelectionChange = (newLabel: string) => {
-        setSelectedFilterLabel(newLabel);
-        // If you had onFilterTypeChange prop:
-        // if (onFilterTypeChange) {
-        //   onFilterTypeChange(); // Notify parent to potentially reset its shared 'value' state
-        // }
     };
 
-    // Component for the select dropdown
-    const FilterSelectorDropdown = () => {
-        return (
-            <select value={selectedFilterLabel} onChange={(event) => { handleFilterSelectionChange(event.target.value); }}>
-                <RenderOptions options={filterlist} />
-            </select>
+    const availableFilters = getAvailableFilters(currentDataset);
+
+    const handleInputChange = (filterType: string, value: string, isSecondValue = false) => {
+        const key = isSecondValue ? `${filterType}_2` : filterType;
+        setInputValues(prev => ({ ...prev, [key]: value }));
+    };
+
+    const buildCombinedFilterUrl = () => {
+        const baseUrls = {
+            populations: "http://localhost:5000/api/population/combined",
+            interestrates: "http://localhost:5000/api/interest-rates/combined", 
+            meterdata: "http://localhost:5000/api/flat-prices/combined"
+        };
+
+        const baseUrl = baseUrls[currentDataset as keyof typeof baseUrls];
+        const params = new URLSearchParams();
+
+        Object.entries(inputValues).forEach(([key, value]) => {
+            if (value && value.trim() !== "" && value !== "false") {
+                if (value === "true") {
+                    params.append(key, "true");
+                } else {
+                    params.append(key, value.trim());
+                }
+            }
+        });
+
+        return params.toString() ? `${baseUrl}?${params.toString()}` : `${baseUrl.replace('/combined', '/')}/`;
+    };
+
+    const handleApplyAllFilters = () => {
+        const activeFilters = Object.entries(inputValues).filter(([, value]) => 
+            value && value.trim() !== "" && value !== "false"
         );
+        
+        if (activeFilters.length === 0) {
+            handleClearFilters();
+            return;
+        }
+
+        const url = buildCombinedFilterUrl();
+        console.log(url);
+        onApplyFilters(url);
     };
 
-    // --- THE KEY CHANGE IS HERE ---
-    // On every render, determine the active callback based on the current selectedFilterLabel
-    // and the (potentially updated) props.callbacks.
+    const handleClearFilters = () => {
+        setInputValues({});
+        onApplyFilters(`http://localhost:5000/api/${currentDataset === "populations" ? "population" : currentDataset === "interestrates" ? "interest-rates" : "flat-prices"}/`);
+    };
 
-    const currentIndex = filterlist.indexOf(selectedFilterLabel);
-    let ActiveFilterFormRenderer: (() => ReactNode) | null = null;
+    const renderFilterInput = (filter: any) => {
+        switch (filter.inputType) {
+            case "checkbox":
+                return (
+                    <div className="filter-item">
+                        <div className="filter-header">
+                            <span className="filter-label">{filter.label}</span>
+                        </div>
+                        <div className="filter-content">
+                            <div className="checkbox-container">
+                                <input 
+                                    type="checkbox" 
+                                    checked={inputValues[filter.type] === "true"}
+                                    onChange={(e) => {
+                                        const newValue = e.target.checked ? "true" : "false";
+                                        handleInputChange(filter.type, newValue);
+                                    }}
+                                />
+                                <span>{filter.label}</span>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case "toggle":
+                return (
+                    <div className="filter-item">
+                        <div className="filter-header">
+                            <span className="filter-label">{filter.label}</span>
+                        </div>
+                        <div className="filter-content">
+                            <div className="toggle-container">
+                                <label className="toggle-switch">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={inputValues[filter.type] === "true"}
+                                        onChange={(e) => {
+                                            const newValue = e.target.checked ? "true" : "false";
+                                            handleInputChange(filter.type, newValue);
+                                        }}
+                                    />
+                                    <span className="toggle-slider"></span>
+                                </label>
+                                <span className="toggle-label">
+                                    {inputValues[filter.type] === "true" ? "Tak" : "Nie"}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case "range":
+                return (
+                    <div className="filter-item">
+                        <div className="filter-header">
+                            <span className="filter-label">{filter.label}</span>
+                        </div>
+                        <div className="filter-content">
+                            <div className="range-inputs">
+                                <input
+                                    type="number"
+                                    placeholder="Od roku"
+                                    value={inputValues[filter.type] || ""}
+                                    onChange={(e) => handleInputChange(filter.type, e.target.value)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleApplyAllFilters();
+                                        }
+                                    }}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Do roku"
+                                    value={inputValues[`${filter.type}_2`] || ""}
+                                    onChange={(e) => handleInputChange(filter.type, e.target.value, true)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleApplyAllFilters();
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                );
+            default:
+                return (
+                    <div className="filter-item">
+                        <div className="filter-header">
+                            <span className="filter-label">{filter.label}</span>
+                        </div>
+                        <div className="filter-content">
+                            <div className="filter-input">
+                                <input
+                                    type={filter.inputType}
+                                    placeholder={filter.placeholder}
+                                    value={inputValues[filter.type] || ""}
+                                    onChange={(e) => handleInputChange(filter.type, e.target.value)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleApplyAllFilters();
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                );
+        }
+    };
 
-    if (currentIndex !== -1 && callbacks[currentIndex]) {
-        ActiveFilterFormRenderer = callbacks[currentIndex];
-    } else if (callbacks.length > 0) {
-        // Fallback to the first callback if the current selection is somehow invalid
-        // (though the useEffect above should prevent this for valid filterlist)
-        ActiveFilterFormRenderer = callbacks[0];
-        // Optionally, you could also reset selectedFilterLabel here if currentIndex was -1
-        // This depends on desired behavior if props become inconsistent.
-        // if (currentIndex === -1 && filterlist.length > 0) {
-        //    setSelectedFilterLabel(filterlist[0]); // This would trigger another re-render
-        // }
-    }
     return (
-        <div className="filter">
-            <h3>Filter</h3>
-            <div className="pickfilter">
-                <FilterSelectorDropdown />
+        <div className="filters-container">
+            <h3>Dostępne filtry</h3>
+            <div className="filters-grid">
+                {availableFilters.map((filter) => (
+                    <div key={filter.type}>
+                        {renderFilterInput(filter)}
+                    </div>
+                ))}
             </div>
-            <div className="filterdata">
-                {/*
-                    Execute the ActiveFilterFormRenderer function.
-                    This function, taken fresh from props.callbacks on each render,
-                    will have the correct closure over the parent's 'value' state.
-                */}
-                {ActiveFilterFormRenderer ? ActiveFilterFormRenderer() : <p>Please select a filter.</p>}
+            <div className="filter-actions">
+                <button className="apply-filters-btn" onClick={handleApplyAllFilters}>
+                    Zastosuj filtry
+                </button>
+                <button className="clear-filters-btn" onClick={handleClearFilters}>
+                    Wyczyść wszystkie filtry
+                </button>
             </div>
         </div>
     );

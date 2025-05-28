@@ -46,6 +46,16 @@ public class PopulationController : ControllerBase
         return Ok(populations);
     }
 
+    [HttpGet("combined")]
+    public ActionResult<List<PopulationDto>> GetPopulationsByCombinedFilters(
+        [FromQuery] int? id = null, 
+        [FromQuery] int? year = null, 
+        [FromQuery] string? city = null)
+    {
+        var populations = _populationService.GetPopulationsByCombinedFilters(id, year, city);
+        return Ok(populations);
+    }
+
     [HttpPost("with-city")]
     public async Task<ActionResult<PopulationDto>> AddPopulationWithCity([FromBody] CreatePopulationDto dto)
     {

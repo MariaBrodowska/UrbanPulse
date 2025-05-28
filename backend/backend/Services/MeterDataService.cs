@@ -82,6 +82,35 @@ public class MeterDataService
             .ToList();
     }
 
+    public List<MeterDataDto> GetMeterDataCombined(bool? isSecondaryMarket = null, bool? isRealistic = null, int? id = null, int? cityId = null)
+    {
+        var query = _context.MeterData
+            .Include(m => m.City)
+            .AsQueryable();
+
+        if (isSecondaryMarket.HasValue)
+        {
+            query = query.Where(m => m.IsSecondaryMarket == isSecondaryMarket.Value);
+        }
+
+        if (isRealistic.HasValue)
+        {
+            query = query.Where(m => m.IsRealistic == isRealistic.Value);
+        }
+
+        if (id.HasValue)
+        {
+            query = query.Where(m => m.Id == id.Value);
+        }
+
+        if (cityId.HasValue)
+        {
+            query = query.Where(m => m.CityId == cityId.Value);
+        }
+
+        return query.Select(m => MapToDto(m)).ToList();
+    }
+
     public async Task<MeterDataDto> AddMeterDataWithCity(string cityName, int year, double price, int quarter, bool isSecondaryMarket, bool isRealistic)
     {
         using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);

@@ -6,8 +6,9 @@ body {
     display: flex; 
     justify-content: center;
     min-height: 100vh;
+    height: 100vh;
     padding-top: 20px; 
-    height: 100%;
+    align-items: center;
     box-sizing: border-box;
 }
 #root {

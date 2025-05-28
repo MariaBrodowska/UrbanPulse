@@ -62,6 +62,17 @@ public class MeterDataController : ControllerBase
         return Ok(meterData);
     }
 
+    [HttpGet("combined")] 
+    public ActionResult<List<MeterDataDto>> GetMeterDataCombined(
+        [FromQuery] bool? market = null,
+        [FromQuery] bool? sales = null,
+        [FromQuery] int? id = null,
+        [FromQuery] int? city = null)
+    {
+        var meterData = _MeterDataService.GetMeterDataCombined(market, sales, id, city);
+        return Ok(meterData);
+    }
+
     [Authorize(Roles = "Admin")]
     [HttpPost("with-city")] //dodanie danych o cenach z miastem
     public async Task<ActionResult<MeterDataDto>> AddMeterDataWithCity([FromBody] CreateMeterDataDto dto)

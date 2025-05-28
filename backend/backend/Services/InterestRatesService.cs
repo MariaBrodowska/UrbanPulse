@@ -174,4 +174,40 @@ public class InterestRatesService
             throw;
         }
     }
+
+    public List<InterestRateDto> GetInterestRatesByCombinedFilters(int? id, int? yearRange, int? yearRange_2)
+    {
+        var query = _context.InterestRates
+            .Include(i => i.TypeOfInterestRate)
+            .AsQueryable();
+
+        // Filter by ID if provided
+        if (id.HasValue)
+        {
+            query = query.Where(i => i.Id == id.Value);
+        }
+
+        // Filter by year range if provided
+        if (yearRange.HasValue && yearRange_2.HasValue)
+        {
+            int startYear = Math.Min(yearRange.Value, yearRange_2.Value);
+            int endYear = Math.Max(yearRange.Value, yearRange_2.Value);
+            query = query.Where(i => i.Date.Year >= startYear && i.Date.Year <= endYear);
+        }
+        else if (yearRange.HasValue)
+        {
+            query = query.Where(i => i.Date.Year == yearRange.Value);
+        }
+
+        return query
+            .Select(i => new InterestRateDto
+            {
+                Id = i.Id,
+                Date = i.Date,
+                Rate = i.Rate,
+                TypeOfInterestRateId = i.TypeOfInterestRateId,
+                TypeOfInterestRateName = i.TypeOfInterestRate != null ? i.TypeOfInterestRate.Name : string.Empty
+            })
+            .ToList();
+    }
 }

@@ -33,6 +33,16 @@ public class InterestRatesController : ControllerBase
         
         return Ok(interestRates);
     }
+    [HttpGet("combined")]
+    public ActionResult<List<InterestRateDto>> GetCombinedFilters(
+        [FromQuery] int? id = null,
+        [FromQuery] int? yearRange = null,
+        [FromQuery] int? yearRange_2 = null)
+    {
+        var interestRates = _interestRatesService.GetInterestRatesByCombinedFilters(id, yearRange, yearRange_2);
+        return Ok(interestRates);
+    }
+
 
     [HttpGet("by-year/{year}")] //w danym roku, srednia z kwartałów
     public ActionResult<List<InterestRateDto>> GetInterestRatesByYear(int year)

@@ -77,6 +77,37 @@ public class PopulationService
             .ToList();
     }
 
+    public List<PopulationDto> GetPopulationsByCombinedFilters(int? id = null, int? year = null, string? cityName = null)
+    {
+        var query = _context.Populations
+            .Include(p => p.City)
+            .AsQueryable();
+
+        if (id.HasValue)
+        {
+            query = query.Where(p => p.Id == id.Value);
+        }
+
+        if (year.HasValue)
+        {
+            query = query.Where(p => p.Year == year.Value);
+        }
+
+        if (!string.IsNullOrEmpty(cityName))
+        {
+            query = query.Where(p => p.City.Name.ToLower() == cityName.ToLower());
+        }
+
+        return query.Select(p => new PopulationDto
+        {
+            Id = p.Id,
+            Year = p.Year,
+            Number = p.Number,
+            CityId = p.CityId,
+            CityName = p.City != null ? p.City.Name : string.Empty
+        }).ToList();
+    }
+
     public async Task<PopulationDto> AddPopulationWithCity(string cityName, int year, int number)
     {
         var existingCity = await _context.Cities

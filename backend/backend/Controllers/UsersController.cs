@@ -3,6 +3,8 @@ using backend.Models;
 using backend.Data;
 using backend.Dtos;
 using backend.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims; 
 
 namespace backend.Controllers
 {
@@ -45,6 +47,31 @@ public class UsersController : ControllerBase
 
         return Ok(new { message = "Zalogowano" });
     }
-}
 
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var id))
+        {
+            return Unauthorized("Nieprawidłowy token użytkownika.");
+        }
+
+        var user = await _userService.GetUserByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound("Użytkownik nie istnieje.");
+        }
+
+        return Ok(new { isAdmin = user.IsAdmin });
+    }
+
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("jwt");
+        return Ok(new { message = "Wylogowano pomyślnie" });
+    }
+}
 }

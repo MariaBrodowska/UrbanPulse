@@ -87,5 +87,23 @@ public class AuthService : IAuthService
         );
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    public async Task<UserDto?> GetUserByIdAsync(int userId)
+    {
+    var user = await _context.Users
+        .Include(u => u.Role)
+        .FirstOrDefaultAsync(u => u.Id == userId);
+
+    if (user == null)
+        return null;
+
+    return new UserDto
+    {
+        Id = user.Id,
+        Email = user.Email,
+        Role = user.Role?.Name ?? "User",
+        IsAdmin = user.Role?.Name == "Admin"
+    };
+    }
 }
 }

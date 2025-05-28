@@ -5,7 +5,7 @@ import axios from "axios"
 import React from "react"
 import Pagination from "../../components/Pagination"
 import { RenderTable } from "./renderTableFunctions"
-
+import Navbar from "../../components/Navbar"
 
 
 function DisplayDatasetsPage() {
@@ -17,6 +17,22 @@ function DisplayDatasetsPage() {
     const itemsPerPage = 23;
     const [currentDataset, setCurrentDataset] = React.useState("populations");
     const [fileName, setFileName] = React.useState("data");
+    const [userEmail, setUserEmail] = React.useState<string | undefined>(undefined);
+
+    React.useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/api/users/me', {
+                    withCredentials: true
+                });
+                setUserEmail(response.data.email);
+            } catch (error) {
+                console.error('Błąd podczas pobierania danych użytkownika:', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     const handleData = (url: string) => {
         setLoading(true)
@@ -74,6 +90,8 @@ function DisplayDatasetsPage() {
         return <div><p>Loading..</p></div>
     } else {
         return (
+            <>
+            <Navbar userEmail={userEmail} />
             <div id="datasetsdiv">
                 <div id="datasetmenutitle">
                     <h1>Datasets</h1>
@@ -133,6 +151,7 @@ function DisplayDatasetsPage() {
                     </div>
                 </div>
             </div>
+            </>
         )
     }
 }

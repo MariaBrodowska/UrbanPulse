@@ -64,7 +64,7 @@ public class UsersController : ControllerBase
             return NotFound("Użytkownik nie istnieje.");
         }
 
-        return Ok(new { isAdmin = user.IsAdmin });
+        return Ok(new { isAdmin = user.IsAdmin, email = user.Email });
     }
 
     [HttpPost("logout")]

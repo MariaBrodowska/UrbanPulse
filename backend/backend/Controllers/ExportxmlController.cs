@@ -31,14 +31,14 @@ public class ExportController : ControllerBase
 
  
        
-    [HttpGet("file/{fileName}")]
-    public async Task<IActionResult> Export(string fileName = "export")
-    {
-        var xmlContent = await _exportService.ExportAllTablesToXml();
-        fileName = fileName + ".xml";
-        var file = _exportService.SaveXmlToFile(xmlContent, fileName);
-        return file;
-    }
+    // [HttpGet("file/{fileName}")]
+    // public async Task<IActionResult> Export(string fileName = "export")
+    // {
+    //     var xmlContent = await _exportService.ExportAllTablesToXml();
+    //     fileName = fileName + ".xml";
+    //     var file = _exportService.SaveXmlToFile(xmlContent, fileName);
+    //     return file;
+    // }
     
     
     [HttpGet("table/{tableName}")]
@@ -80,7 +80,7 @@ public class ExportController : ControllerBase
         }
     }
 
-    [HttpGet("singleTableFile")]
+    [HttpGet("file")]
     public async Task<IActionResult> getSingleTableToFile([FromQuery] string tableName, [FromQuery] string fileName) {
         try
         {

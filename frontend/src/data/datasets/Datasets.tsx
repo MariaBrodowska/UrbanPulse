@@ -233,10 +233,10 @@ function DisplayDatasetsPage() {
     } else {
         return (
             <div id="datasetsdiv">
-                <div id="datasetmenu">
-                    <div id="datasetmenutitle">
+                <div id="datasetmenutitle">
                         <h1>Datasets</h1>
                     </div>
+                <div id="datasetmenu">
                     <div>
                         <h3>Current dataset</h3>
                         <select value={currentDataset} id="datasetselect" onChange={(event) => { setCurrentDataset(event.target.value) }}>
@@ -250,7 +250,7 @@ function DisplayDatasetsPage() {
                         <h3>Export</h3>
                         <input type="text" value={fileName} onChange={(event) => {setFileName(event.target.value)}} placeholder="filename"></input>
                         <Link to={handleExport("http://localhost:5000/api/export/singleTableFile")} className="exportlink">Export to XML</Link>
-                        <Link to={handleExport("http://localhost:5000/api/exportjson/singleTableFile")} className="exportlink">Export to JSON</Link>
+                        <Link to={handleExport("http://localhost:5000/api/exportjson/file")} className="exportlink">Export to JSON</Link>
                     </div>
                 </div>
                 <div id="datasetdisplay">

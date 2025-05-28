@@ -249,7 +249,7 @@ function DisplayDatasetsPage() {
                     <div id="exports">
                         <h3>Export</h3>
                         <input type="text" value={fileName} onChange={(event) => {setFileName(event.target.value)}} placeholder="filename"></input>
-                        <Link to={handleExport("http://localhost:5000/api/export/singleTableFile")} className="exportlink">Export to XML</Link>
+                        <Link to={handleExport("http://localhost:5000/api/export/file")} className="exportlink">Export to XML</Link>
                         <Link to={handleExport("http://localhost:5000/api/exportjson/file")} className="exportlink">Export to JSON</Link>
                     </div>
                 </div>

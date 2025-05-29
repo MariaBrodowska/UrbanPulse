@@ -82,7 +82,7 @@ public class MeterDataService
             .ToList();
     }
 
-    public List<MeterDataDto> GetMeterDataCombined(bool? isSecondaryMarket = null, bool? isRealistic = null, int? id = null, int? cityId = null)
+    public List<MeterDataDto> GetMeterDataCombined(bool? isSecondaryMarket = null, bool? isRealistic = null, int? id = null, string? cityName = null)
     {
         var query = _context.MeterData
             .Include(m => m.City)
@@ -103,9 +103,9 @@ public class MeterDataService
             query = query.Where(m => m.Id == id.Value);
         }
 
-        if (cityId.HasValue)
+        if (!string.IsNullOrEmpty(cityName))
         {
-            query = query.Where(m => m.CityId == cityId.Value);
+            query = query.Where(m => m.City.Name.ToLower() == cityName.ToLower());
         }
 
         return query.Select(m => MapToDto(m)).ToList();
@@ -236,6 +236,97 @@ public class MeterDataService
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
             return MapToDto(meterData);
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+
+    public async Task<MeterDataDto?> UpdateMeterData(int id, int cityId, string cityName, int year, double price, int quarter, bool isSecondaryMarket, bool isRealistic)
+    {
+        using var transaction = await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+        try
+        {
+            var meterData = await _context.MeterData
+                .Include(m => m.City)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            
+            if (meterData == null)
+            {
+                return null;
+            }
+
+            // Validate input
+            if (quarter < 1 || quarter > 4)
+            {
+                throw new ArgumentException("Quarter must be between 1 and 4.");
+            }
+            if (price < 0)
+            {
+                throw new ArgumentException("Price can't be negative.");
+            }
+
+            // Handle city update if cityName is provided and different
+            City? city = null;
+            if (!string.IsNullOrEmpty(cityName) && !cityName.Equals(meterData.City?.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                city = await _context.Cities
+                    .FirstOrDefaultAsync(c => c.Name.ToLower() == cityName.ToLower());
+                
+                if (city == null)
+                {
+                    city = new City { Name = cityName };
+                    _context.Cities.Add(city);
+                    await _context.SaveChangesAsync();
+                }
+                meterData.CityId = city.Id;
+            }
+            else if (cityId > 0 && cityId != meterData.CityId)
+            {
+                city = await _context.Cities.FindAsync(cityId);
+                if (city == null)
+                {
+                    throw new ArgumentException($"City with ID {cityId} not found.");
+                }
+                meterData.CityId = cityId;
+            }
+
+            // Check for duplicate entries (excluding the current record)
+            // Only check if we're actually changing city, year, quarter, or market type
+            var existingMeterData = await _context.MeterData
+                .FirstOrDefaultAsync(m => m.Id != id && 
+                                        m.CityId == meterData.CityId && 
+                                        m.Year == year && 
+                                        m.Quarter == quarter &&
+                                        m.IsSecondaryMarket == isSecondaryMarket &&
+                                        m.IsRealistic == isRealistic);
+
+            if (existingMeterData != null)
+            {
+                var cityNameForError = city?.Name ?? meterData.City?.Name ?? "Unknown";
+                var marketType = isSecondaryMarket ? "secondary" : "primary";
+                var salesType = isRealistic ? "realistic" : "offered";
+                throw new InvalidOperationException($"Meter data for {cityNameForError} in {year} Q{quarter} ({marketType} market, {salesType} prices) already exists.");
+            }
+
+            // Update all fields
+            meterData.Year = year;
+            meterData.Price = price;
+            meterData.Quarter = quarter;
+            meterData.IsSecondaryMarket = isSecondaryMarket;
+            meterData.IsRealistic = isRealistic;
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+            
+            // Reload to get updated city information
+            var updatedMeterData = await _context.MeterData
+                .Include(m => m.City)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            
+            return updatedMeterData != null ? MapToDto(updatedMeterData) : null;
         }
         catch
         {

@@ -2,6 +2,7 @@ using backend.Data;
 using backend.Models;
 using backend.Dtos;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace backend.Services;
 
@@ -18,13 +19,14 @@ public class PopulationService
     {
         return _context.Populations
             .Include(p => p.City)
+            .OrderBy(p => p.Id)
             .Select(p => new PopulationDto
             {
-                Id = p.Id,
-                Year = p.Year,
-                Number = p.Number,
-                CityId = p.CityId,
-                CityName = p.City != null ? p.City.Name : string.Empty
+            Id = p.Id,
+            Year = p.Year,
+            Number = p.Number,
+            CityId = p.CityId,
+            CityName = p.City != null ? p.City.Name : string.Empty
             })
             .ToList();
     }
@@ -189,7 +191,7 @@ public class PopulationService
         };
     }
 
-    public async Task<PopulationDto?> UpdatePopulation(int id, int number)
+    public async Task<PopulationDto?> UpdatePopulation(int id, int number, int year, string cityName)
     {
         var population = await _context.Populations
             .Include(p => p.City)
@@ -200,8 +202,38 @@ public class PopulationService
             return null;
         }
 
+        // Update number and year
         population.Number = number;
+        population.Year = year;
+
+        // Handle city update if cityName is provided and different
+        if (!string.IsNullOrEmpty(cityName) && 
+            (population.City == null || !population.City.Name.Equals(cityName, StringComparison.OrdinalIgnoreCase)))
+        {
+            var existingCity = await _context.Cities
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == cityName.ToLower());
+
+            City city;
+            if (existingCity == null)
+            {
+                city = new City { Name = cityName };
+                _context.Cities.Add(city);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                city = existingCity;
+            }
+
+            population.CityId = city.Id;
+        }
+
         await _context.SaveChangesAsync();
+
+        // Reload to get updated city information
+        population = await _context.Populations
+            .Include(p => p.City)
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         return new PopulationDto
         {

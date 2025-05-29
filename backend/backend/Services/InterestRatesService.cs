@@ -86,17 +86,17 @@ public class InterestRatesService
             .ToList();
     }
 
-    public async Task<InterestRateDto> AddInterestRate(DateTime date, int rate, int TypeOfInterestRateId)
+    public async Task<InterestRateDto> AddInterestRate(DateTime date, int rate, string TypeOfInterestRateName)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
         try{
-            var typeOfInterestRate = await _context.TypeOfInterestRates.FindAsync(TypeOfInterestRateId);
+            var typeOfInterestRate = await _context.TypeOfInterestRates.FindAsync(TypeOfInterestRateName);
             if (typeOfInterestRate == null)
             {
-                throw new ArgumentException($"Type of interest rate with ID {TypeOfInterestRateId} not found.");
+                throw new ArgumentException($"Type of interest rate with Name {TypeOfInterestRateName} not found.");
             }
             var existingInterestRate = await _context.InterestRates
-                .FirstOrDefaultAsync(i => i.Date == date && i.TypeOfInterestRateId == TypeOfInterestRateId);
+                .FirstOrDefaultAsync(i => i.Date == date && i.TypeOfInterestRateId == typeOfInterestRate.Id);
             if (existingInterestRate != null)
             {
                 throw new InvalidOperationException($"Interest rate for type {typeOfInterestRate.Name} on {date.ToShortDateString()} already exists.");
@@ -105,7 +105,7 @@ public class InterestRatesService
             {
                 Date = date,
                 Rate = rate,
-                TypeOfInterestRateId = TypeOfInterestRateId
+                TypeOfInterestRateId = typeOfInterestRate.Id
             };
             _context.InterestRates.Add(interestRate);
             await _context.SaveChangesAsync();
@@ -125,27 +125,50 @@ public class InterestRatesService
         }
     }
 
-    public async Task<InterestRateDto?> UpdateInterestRate(int id, int rate)
+    public async Task<InterestRateDto?> UpdateInterestRate(int id, DateTime date, int rate, int typeOfInterestRateId)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
         try{
-            var interestRates = await _context.InterestRates
+            var interestRate = await _context.InterestRates
                 .Include(i => i.TypeOfInterestRate)
                 .FirstOrDefaultAsync(i => i.Id == id);
-            if (interestRates == null)
+            if (interestRate == null)
             {
                 return null;
             }
-            interestRates.Rate = rate;
+
+            // Check if the new TypeOfInterestRate exists
+            var typeOfInterestRate = await _context.TypeOfInterestRates.FindAsync(typeOfInterestRateId);
+            if (typeOfInterestRate == null)
+            {
+                throw new ArgumentException($"Type of interest rate with ID {typeOfInterestRateId} not found.");
+            }
+
+            // Check for duplicate entries (same date and type, but different id)
+            var existingInterestRate = await _context.InterestRates
+                .FirstOrDefaultAsync(i => i.Date == date && i.TypeOfInterestRateId == typeOfInterestRateId && i.Id != id);
+            if (existingInterestRate != null)
+            {
+                throw new InvalidOperationException($"Interest rate for type {typeOfInterestRate.Name} on {date.ToShortDateString()} already exists.");
+            }
+
+            interestRate.Date = date;
+            interestRate.Rate = rate;
+            interestRate.TypeOfInterestRateId = typeOfInterestRateId;
+            
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
+            
+            // Reload the entity to get the updated TypeOfInterestRate
+            await _context.Entry(interestRate).Reference(i => i.TypeOfInterestRate).LoadAsync();
+            
             return new InterestRateDto
             {
-                Id = interestRates.Id,
-                Date = interestRates.Date,
-                Rate = interestRates.Rate,
-                TypeOfInterestRateId = interestRates.TypeOfInterestRateId,
-                TypeOfInterestRateName = interestRates.TypeOfInterestRate?.Name ?? string.Empty
+                Id = interestRate.Id,
+                Date = interestRate.Date,
+                Rate = interestRate.Rate,
+                TypeOfInterestRateId = interestRate.TypeOfInterestRateId,
+                TypeOfInterestRateName = interestRate.TypeOfInterestRate?.Name ?? string.Empty
             };
         }
         catch{

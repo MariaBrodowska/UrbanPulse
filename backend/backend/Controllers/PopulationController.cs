@@ -90,9 +90,9 @@ public class PopulationController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<PopulationDto>> UpdatePopulation(int id, [FromBody] int number)
+    public async Task<ActionResult<PopulationDto>> UpdatePopulation(int id, [FromBody] UpdatePopulationDto dto)
     {
-        var result = await _populationService.UpdatePopulation(id, number);
+        var result = await _populationService.UpdatePopulation(id, dto.Number, dto.Year, dto.CityName);
         if (result == null)
             return NotFound();
 

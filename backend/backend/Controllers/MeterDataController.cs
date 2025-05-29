@@ -67,14 +67,14 @@ public class MeterDataController : ControllerBase
         [FromQuery] bool? market = null,
         [FromQuery] bool? sales = null,
         [FromQuery] int? id = null,
-        [FromQuery] int? city = null)
+        [FromQuery] string? city = null)
     {
         var meterData = _MeterDataService.GetMeterDataCombined(market, sales, id, city);
         return Ok(meterData);
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("with-city")] //dodanie danych o cenach z miastem
+    [HttpPost("")] //dodanie danych o cenach z miastem
     public async Task<ActionResult<MeterDataDto>> AddMeterDataWithCity([FromBody] CreateMeterDataDto dto)
     {
         try
@@ -89,7 +89,7 @@ public class MeterDataController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("")] //dodanie danych o cenach z id miasta
+    [HttpPost("cos")] //dodanie danych o cenach z id miasta
     public async Task<ActionResult<MeterDataDto>> AddMeterData([FromBody] CreateMeterDataWithCityIdDto dto)
     {
         try
@@ -109,13 +109,25 @@ public class MeterDataController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpPut("{id}")] //aktualizacja danych o cenach
-    public async Task<ActionResult<MeterDataDto>> UpdateMeterData(int id, [FromBody] double price)
+    public async Task<ActionResult<MeterDataDto>> UpdateMeterData(int id, [FromBody] UpdateMeterDataDto dto)
     {
-        var result = await _MeterDataService.UpdateMeterData(id, price);
-        if (result == null)
-            return NotFound();
+        try
+        {
+            var result = await _MeterDataService.UpdateMeterData(id, dto.CityId, dto.CityName, dto.Year, dto.Price, dto.Quarter, dto.IsSecondaryMarket, dto.IsRealistic);
+            if (result == null)
+                return NotFound();
 
-        return Ok(result);
+
+            return Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
     }
 
     [Authorize(Roles = "Admin")]

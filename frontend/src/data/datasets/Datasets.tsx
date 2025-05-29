@@ -2,10 +2,11 @@ import { Link } from "react-router-dom"
 import "./Datasets.css"
 import GetFilters from "./Filters"
 import axios from "axios"
-import React from "react"
+import React, { use, useState } from "react"
 import Pagination from "../../components/Pagination"
 import { RenderTable } from "./renderTableFunctions"
 import Navbar from "../../components/Navbar"
+import EditMenu from "../../components/EditMenu"
 
 
 function DisplayDatasetsPage() {
@@ -18,7 +19,9 @@ function DisplayDatasetsPage() {
     const [currentDataset, setCurrentDataset] = React.useState("populations");
     const [fileName, setFileName] = React.useState("data");
     const [userEmail, setUserEmail] = React.useState<string | undefined>(undefined);
-
+    const [showEditMenu, setShowEditMenu] = useState(false);
+    const [dataToEdit,setDataToEdit] = useState<Object>({})
+    const [isCreating, setIsCreating] = useState(false);
     React.useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -85,7 +88,22 @@ function DisplayDatasetsPage() {
     React.useEffect(() => {
         handleData("http://localhost:5000/api/population/");
     }, []);
+    const createData = () => {
+        setShowEditMenu(true);
+        setIsCreating(true)
+    }
+    const editData = (data: Object) => {
+        setShowEditMenu(true);
+        setDataToEdit(data);
+    };
 
+    const closeEditMenu = () => {
+        setShowEditMenu(false);
+        setDataToEdit({});
+        setIsCreating(false)
+    };
+                        
+    
     if (isLoading) {
         return <div><p>Loading..</p></div>
     } else {
@@ -140,9 +158,15 @@ function DisplayDatasetsPage() {
                                 <p>Aktualna strona: <strong>{currentPage}</strong> z <strong>{totalPages}</strong></p>
                             </div>
                         </div>
+                        <button className="apply-filters-btn" onClick={() => {editData(dataToEdit); setIsCreating(true)}}>
+                            <h4>Dodaj nowy rekord</h4>
+                        </button>
                     </div>
                     <div id="datasetdisplay">
-                        <RenderTable objects={data} />
+                        <RenderTable objects={data} onClick={(data) =>{
+                            setShowEditMenu(true);
+                            editData(data)
+                        }} />
                         <Pagination 
                             currentPage={currentPage} 
                             totalPages={totalPages} 
@@ -151,6 +175,14 @@ function DisplayDatasetsPage() {
                     </div>
                 </div>
             </div>
+           {showEditMenu && (
+            <EditMenu 
+                data={dataToEdit} 
+                datasetType={currentDataset} 
+                onClose={closeEditMenu}
+                isCreating={isCreating}
+            />
+           )}
             </>
         )
     }

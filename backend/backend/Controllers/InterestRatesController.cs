@@ -62,11 +62,11 @@ public class InterestRatesController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpPost("")] //dodanie oprocentowania
-    public async Task<ActionResult<InterestRateDto>> AddInterestRate([FromBody] CreateIRWithTOIRIdDto dto)
+    public async Task<ActionResult<InterestRateDto>> AddInterestRate([FromBody] CreateInterestRateDto dto)
     {    
         try
         {
-            var result = await _interestRatesService.AddInterestRate(dto.Date, dto.Rate, dto.TypeOfInterestRateId);
+            var result = await _interestRatesService.AddInterestRate(dto.Date, dto.Rate, dto.TypeOfInterestRateName);
             return CreatedAtAction(nameof(GetInterestRatesById), new { id = result.Id }, result);
         }
         catch (ArgumentException ex)
@@ -81,13 +81,24 @@ public class InterestRatesController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpPut("{id}")] //aktualizacja oprocentowania
-    public async Task<ActionResult<InterestRateDto>> UpdateInterestRate(int id, [FromBody] int rate)
+    public async Task<ActionResult<InterestRateDto>> UpdateInterestRate(int id, [FromBody] UpdateInterestRateDto dto)
     {
-        var result = await _interestRatesService.UpdateInterestRate(id, rate);
-        if (result == null)
-            return NotFound();
+        try
+        {
+            var result = await _interestRatesService.UpdateInterestRate(id, dto.Date, dto.Rate, dto.TypeOfInterestRateId);
+            if (result == null)
+                return NotFound();
 
-        return Ok(result);
+            return Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
     }
 
     [Authorize(Roles = "Admin")]

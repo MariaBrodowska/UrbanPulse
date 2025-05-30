@@ -1,294 +1,314 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import "./Charts.css";
+import axios from "axios";
+import Navbar from "../../components/Navbar";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale, // Import TimeScale for date axes
-  type ChartOptions, // Type for chart options
-  // ChartData // Type for chart data structure (can be used for state)
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    ArcElement,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import 'chartjs-adapter-date-fns'; // Adapter for date handling
-// Optional: if you use date-fns for date manipulation elsewhere
-// import { format } from 'date-fns';
 
+// Importowanie modułowych komponentów
+import {
+    DatasetSelector,
+    ChartTypeSelector,
+    ChartFilters,
+    ChartActions,
+    ChartContainer,
+    ChartInfo,
+    ScatterAxisSelector,
+    generateLineOrBarChart,
+    generatePieChart,
+    generateMultiAxisLineChart,
+    generateCorrelationScatterPlot,
+    buildFilterUrl
+} from "../../components/charts";
+
+// Importowanie typów
+import type { 
+    PopulationData, 
+    InterestRateData, 
+    MeterData, 
+    ChartType, 
+    FilterState,
+    SelectedDatasets
+} from "../../components/charts";
+
+// Rejestrowanie komponentów Chart.js
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale // Register TimeScale
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    ArcElement
 );
 
-// --- API Data Interfaces ---
-interface PopulationRecord {
-  id: number;
-  year: number;
-  number: number;
-  cityId: number;
-  cityName: string;
-}
-
-interface InterestRateRecord {
-  id: number;
-  date: string; // ISO date string
-  rate: number;
-  typeOfInterestRateId: number;
-  typeOfInterestRateName: string;
-}
-
-interface FlatPriceRecord {
-  id: number;
-  year: number;
-  price: number;
-  quarter: number;
-  isSecondaryMarket: boolean;
-  isRealistic: boolean;
-  cityId: number;
-  cityName: string;
-}
-
-// --- Chart.js Data Structures ---
-interface ChartPoint {
-  x: number | Date; // Year (number) or Date object
-  y: number;
-}
-
-interface ChartJsDataset {
-  label: string;
-  data: ChartPoint[];
-  borderColor: string;
-  tension: number;
-  fill: boolean;
-  // pointRadius?: number; // Optional: for customizing points
-  // pointHoverRadius?: number;
-}
-
-interface FormattedChartData {
-  datasets: ChartJsDataset[];
-}
-
-// Base URL for your API
 const API_BASE_URL = 'http://localhost:5000/api';
 
-// Helper function to generate random colors for chart lines
-const getRandomColor = (): string => {
-  const r = Math.floor(Math.random() * 200);
-  const g = Math.floor(Math.random() * 200);
-  const b = Math.floor(Math.random() * 200);
-  return `rgb(${r}, ${g}, ${b})`;
-};
+function ChartsPage() {
+    const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    
+    // Stan komponentów
+    const [selectedDatasets, setSelectedDatasets] = useState<SelectedDatasets>({
+        population: true,
+        interestRates: false,
+        meterData: false
+    });
+    const [chartType, setChartType] = useState<ChartType>('line');
+    const [chartData, setChartData] = useState<any>(null);
+    const [useLogarithmicScale, setUseLogarithmicScale] = useState<boolean>(false);
+    
+    // Stan dla wykresu punktowego
+    const [scatterXAxis, setScatterXAxis] = useState<'population' | 'interestRates' | 'meterData'>('population');
+    const [scatterYAxis, setScatterYAxis] = useState<'population' | 'interestRates' | 'meterData'>('meterData');
+    
+    const [filters, setFilters] = useState<FilterState>({
+        populations: {},
+        interestrates: {},
+        meterdata: {}
+    });
+    
+    // Dane z API
+    const [populationData, setPopulationData] = useState<PopulationData[]>([]);
+    const [interestRateData, setInterestRateData] = useState<InterestRateData[]>([]);
+    const [meterDataList, setMeterDataList] = useState<MeterData[]>([]);
 
-// Valid time units for Chart.js time scale
-type TimeUnit = 'millisecond' | 'second' | 'minute' | 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year';
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    const response = await axios.get('http://localhost:5000/api/auth/me', {withCredentials:true}
+                    );
+                    setUserEmail(response.data.user.email);
+                }
+            } catch (error) {
+                console.error('Błąd podczas pobierania danych użytkownika:', error);
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            }
+        };
 
+        fetchUserData();
+    }, []);
 
-const DataCharts: React.FC = () => {
-  const [populationChartData, setPopulationChartData] = useState<FormattedChartData | null>(null);
-  const [interestRateChartData, setInterestRateChartData] = useState<FormattedChartData | null>(null);
-  const [flatPriceChartData, setFlatPriceChartData] = useState<FormattedChartData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const [popRes, interestRes, flatPriceRes] = await Promise.all([
-          axios.get<PopulationRecord[]>(`${API_BASE_URL}/population/`, {withCredentials:true}),
-          axios.get<InterestRateRecord[]>(`${API_BASE_URL}/interest-rates/`, {withCredentials:true}),
-          axios.get<FlatPriceRecord[]>(`${API_BASE_URL}/flat-prices/`, {withCredentials:true})
-        ]);
+        setIsLoading(true);
+        setError(null);
+        
+        try {
+            const requests = [];
 
-        // 1. Process Population Data
-        if (popRes.data && popRes.data.length > 0) {
-          const rawPopulationData = popRes.data;
-          const populationByCity = rawPopulationData.reduce((acc, item) => {
-            acc[item.cityName] = acc[item.cityName] || [];
-            acc[item.cityName].push({ x: item.year, y: item.number });
-            return acc;
-          }, {} as Record<string, ChartPoint[]>);
+            if (selectedDatasets.population) {
+                const populationUrl = buildFilterUrl(`${API_BASE_URL}/population/combined`, filters.populations);
+                requests.push(
+                    axios.get(populationUrl,{withCredentials:true}).then(response => ({ type: 'population', data: response.data }))
+                );
+            }
 
-          const populationDatasets: ChartJsDataset[] = Object.entries(populationByCity).map(([cityName, data]) => ({
-            label: cityName,
-            data: data.sort((a, b) => (a.x as number) - (b.x as number)), // Sort by year
-            borderColor: getRandomColor(),
-            tension: 0.1,
-            fill: false,
-          }));
-          setPopulationChartData({ datasets: populationDatasets });
-        } else {
-          setPopulationChartData({ datasets: [] });
+            if (selectedDatasets.interestRates) {
+                const interestRateUrl = buildFilterUrl(`${API_BASE_URL}/interest-rates/combined`, filters.interestrates);
+                requests.push(
+                    axios.get(interestRateUrl,{withCredentials:true}).then(response => ({ type: 'interestRates', data: response.data }))
+                );
+            }
+
+            if (selectedDatasets.meterData) {
+                const meterDataUrl = buildFilterUrl(`${API_BASE_URL}/flat-prices/combined`, filters.meterdata);
+                requests.push(
+                    axios.get(meterDataUrl,{withCredentials:true}).then(response => ({ type: 'meterData', data: response.data }))
+                );
+            }
+
+            if (requests.length === 0) {
+                setError('Please select at least one dataset');
+                return;
+            }
+
+            const responses = await Promise.all(requests);
+            
+            // Reset danych
+            setPopulationData([]);
+            setInterestRateData([]);
+            setMeterDataList([]);
+
+            // Przetwarzanie odpowiedzi
+            let newPopulationData = populationData;
+            let newInterestRateData = interestRateData;
+            let newMeterDataList = meterDataList;
+
+            responses.forEach(response => {
+                switch (response.type) {
+                    case 'population':
+                        setPopulationData(response.data);
+                        newPopulationData = response.data;
+                        break;
+                    case 'interestRates':
+                        setInterestRateData(response.data);
+                        newInterestRateData = response.data;
+                        break;
+                    case 'meterData':
+                        setMeterDataList(response.data);
+                        newMeterDataList = response.data;
+                        break;
+                }
+            });
+
+            // Generowanie danych dla wykresu
+            generateChart(newPopulationData, newInterestRateData, newMeterDataList);
+
+        } catch (error: any) {
+            console.error('Error fetching data:', error);
+            setError(error.response?.data?.message || 'Failed to fetch data');
+        } finally {
+            setIsLoading(false);
         }
-
-        // 2. Process Interest Rate Data
-        if (interestRes.data && interestRes.data.length > 0) {
-          const rawInterestData = interestRes.data;
-          const ratesByType = rawInterestData.reduce((acc, item) => {
-            acc[item.typeOfInterestRateName] = acc[item.typeOfInterestRateName] || [];
-            acc[item.typeOfInterestRateName].push({ x: new Date(item.date), y: item.rate });
-            return acc;
-          }, {} as Record<string, ChartPoint[]>);
-
-          const interestDatasets: ChartJsDataset[] = Object.entries(ratesByType).map(([typeName, data]) => ({
-            label: typeName,
-            data: data.sort((a, b) => (a.x as Date).getTime() - (b.x as Date).getTime()), // Sort by date
-            borderColor: getRandomColor(),
-            tension: 0.1,
-            fill: false,
-          }));
-          setInterestRateChartData({ datasets: interestDatasets });
-        } else {
-          setInterestRateChartData({ datasets: [] });
-        }
-
-        // 3. Process Flat Price Data
-        if (flatPriceRes.data && flatPriceRes.data.length > 0) {
-          const rawFlatPriceData = flatPriceRes.data;
-          const pricesByCity = rawFlatPriceData.reduce((acc, item) => {
-            acc[item.cityName] = acc[item.cityName] || [];
-            const quarterStartDate = new Date(item.year, (item.quarter - 1) * 3, 1); // Month is 0-indexed
-            acc[item.cityName].push({ x: quarterStartDate, y: item.price });
-            return acc;
-          }, {} as Record<string, ChartPoint[]>);
-
-          const flatPriceDatasets: ChartJsDataset[] = Object.entries(pricesByCity).map(([cityName, data]) => ({
-            label: cityName,
-            data: data.sort((a, b) => (a.x as Date).getTime() - (b.x as Date).getTime()), // Sort by date
-            borderColor: getRandomColor(),
-            tension: 0.1,
-            fill: false,
-          }));
-          setFlatPriceChartData({ datasets: flatPriceDatasets });
-        } else {
-          setFlatPriceChartData({ datasets: [] });
-        }
-
-      } catch (err) {
-        console.error("Failed to fetch data:", err);
-        if (axios.isAxiosError(err)) {
-          setError(err.response?.data?.message || err.message || "Failed to load data from API.");
-        } else if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("An unknown error occurred.");
-        }
-      } finally {
-        setLoading(false);
-      }
     };
 
-    fetchData();
-  }, []);
+    const generateChart = (
+        populationDataParam?: PopulationData[],
+        interestRateDataParam?: InterestRateData[],
+        meterDataParam?: MeterData[]
+    ) => {
+        const popData = populationDataParam || populationData;
+        const intData = interestRateDataParam || interestRateData;
+        const metData = meterDataParam || meterDataList;
 
-  const commonOptions = (
-    titleText: string,
-    xAxisLabel: string,
-    yAxisLabel: string,
-    timeUnit: TimeUnit | null = null // Allow null for non-time scales
-  ): ChartOptions<'line'> => ({
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: titleText,
-      },
-      tooltip: {
-        mode: 'index' as const,
-        intersect: false,
-      },
-    },
-    scales: {
-      x: {
-        type: timeUnit ? 'time' : 'linear', // 'linear' for population year, 'time' for others
-        title: {
-          display: true,
-          text: xAxisLabel,
-        },
-        ...(timeUnit && {
-          time: {
-            unit: timeUnit,
-            tooltipFormat: timeUnit === 'quarter' ? 'QQQ yyyy' : (timeUnit === 'year' ? 'yyyy' : 'MMM yyyy'),
-            displayFormats: { // Ensure displayFormats match the unit
-              quarter: 'QQQ yyyy',
-              month: 'MMM yyyy',
-              year: 'yyyy',
-            }
-          },
-        }),
-        ...(!timeUnit && { // Specific for population chart (linear scale with year numbers)
-            ticks: {
-                stepSize: 1,
-                callback: function(value: string | number) { // value can be string or number from Chart.js
-                    // Ensure we only show integer years if the scale generates fractional ticks
-                    return Number.isInteger(Number(value)) ? value : null;
-                }
-            }
-        })
-      },
-      y: {
-        title: {
-          display: true,
-          text: yAxisLabel,
-        },
-        beginAtZero: false, // Consider true for population if it makes sense
-      },
-    },
-  });
+        let data;
+        if (chartType === 'pie') {
+            data = generatePieChart(popData, intData, metData, selectedDatasets, useLogarithmicScale);
+        } else if (chartType === 'multiAxis') {
+            data = generateMultiAxisLineChart(popData, intData, metData, selectedDatasets, useLogarithmicScale);
+        } else if (chartType === 'scatter') {
+            data = generateCorrelationScatterPlot(popData, intData, metData, scatterXAxis, scatterYAxis, useLogarithmicScale);
+        } else {
+            data = generateLineOrBarChart(popData, intData, metData, selectedDatasets, useLogarithmicScale);
+        }
 
-  if (loading) return <p className="status">Loading data...</p>;
-  if (error) return <p className="status error">Error: {error}</p>;
+        setChartData(data);
+    };
 
-  return (
-    <div className="Charts">
-      <h1>Data Visualizations (TypeScript)</h1>
+    const handleGenerate = () => {
+        fetchData();
+    };
 
-      <div className="chart-container">
-        <h2>Population Over Years</h2>
-        {populationChartData && populationChartData.datasets.length > 0 ? (
-          <Line
-            options={commonOptions('City Population', 'Year', 'Population', null)} // 'year' as timeUnit if preferred
-            data={populationChartData}
-          />
-        ) : <p>No population data available or an error occurred.</p>}
-      </div>
+    const handleClear = () => {
+        setChartData(null);
+        setPopulationData([]);
+        setInterestRateData([]);
+        setMeterDataList([]);
+        setError(null);
+        setFilters({
+            populations: {},
+            interestrates: {},
+            meterdata: {}
+        });
+    };
 
-      <div className="chart-container">
-        <h2>Interest Rates Over Time</h2>
-        {interestRateChartData && interestRateChartData.datasets.length > 0 ? (
-          <Line
-            options={commonOptions('Interest Rates', 'Date', 'Rate', 'month')}
-            data={interestRateChartData}
-          />
-        ) : <p>No interest rate data available or an error occurred.</p>}
-      </div>
+    const handleDatasetChange = (newSelectedDatasets: SelectedDatasets) => {
+        setSelectedDatasets(newSelectedDatasets);
+    };
 
-      <div className="chart-container">
-        <h2>Flat Prices Over Time (by Quarter)</h2>
-        {flatPriceChartData && flatPriceChartData.datasets.length > 0 ? (
-          <Line
-            options={commonOptions('Flat Prices', 'Time (Year-Quarter)', 'Price (PLN)', 'quarter')}
-            data={flatPriceChartData}
-          />
-        ) : <p>No flat price data available or an error occurred.</p>}
-      </div>
-    </div>
-  );
-};
+    const handleChartTypeChange = (newChartType: ChartType) => {
+        setChartType(newChartType);
+        if (chartData) {
+            // Regeneruj wykres z nowym typem
+            generateChart();
+        }
+    };
 
+    const handleFiltersChange = (newFilters: FilterState) => {
+        setFilters(newFilters);
+    };
 
-export default DataCharts;
+    const handleLogarithmicScaleChange = (newUseLogarithmicScale: boolean) => {
+        setUseLogarithmicScale(newUseLogarithmicScale);
+        if (chartData) {
+            // Regeneruj wykres z nową opcją logarytmiczną
+            generateChart();
+        }
+    };
+
+    const hasSelectedDatasets = Object.values(selectedDatasets).some(Boolean);
+
+    return (
+        <div className="charts-page">
+            <Navbar userEmail={userEmail} />
+            
+            <div className="charts-container">
+                <div className="charts-header">
+                    <h1>Data Visualization</h1>
+                    <p>Create interactive charts from multiple data sources</p>
+                </div>
+
+                <div className="charts-content">
+                    <div className="charts-main">
+                        <ChartContainer
+                            chartType={chartType}
+                            chartData={chartData}
+                            error={error}
+                        />
+
+                        <ChartInfo
+                            populationData={populationData}
+                            interestRateData={interestRateData}
+                            meterData={meterDataList}
+                            selectedDatasets={selectedDatasets}
+                        />
+                    </div>
+
+                    <div className="charts-sidebar">
+                        <DatasetSelector
+                            selectedDatasets={selectedDatasets}
+                            onDatasetChange={handleDatasetChange}
+                        />
+
+                        <ChartTypeSelector
+                            chartType={chartType}
+                            onChartTypeChange={handleChartTypeChange}
+                        />
+
+                        {chartType === 'scatter' && (
+                            <ScatterAxisSelector
+                                xAxisData={scatterXAxis}
+                                yAxisData={scatterYAxis}
+                                onXAxisChange={setScatterXAxis}
+                                onYAxisChange={setScatterYAxis}
+                            />
+                        )}
+
+                        <ChartFilters
+                            filters={filters}
+                            selectedDatasets={selectedDatasets}
+                            onFiltersChange={handleFiltersChange}
+                        />
+
+                        <ChartActions
+                            onGenerate={handleGenerate}
+                            onClear={handleClear}
+                            isLoading={isLoading}
+                            hasSelectedDatasets={hasSelectedDatasets}
+                            useLogarithmicScale={useLogarithmicScale}
+                            onLogarithmicScaleChange={handleLogarithmicScaleChange}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default ChartsPage;

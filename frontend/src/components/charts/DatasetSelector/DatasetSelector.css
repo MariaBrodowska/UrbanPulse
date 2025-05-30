@@ -1,0 +1,55 @@
+/* === DATASET SELECTOR === */
+.dataset-selection {
+    margin-bottom: 20px;
+}
+
+.dataset-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dataset-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dataset-checkbox:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dataset-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #667eea;
+    cursor: pointer;
+}
+
+.dataset-checkbox label {
+    font-weight: 500;
+    color: #ffffff;
+    cursor: pointer;
+    flex: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dataset-checkbox {
+        padding: 12px;
+    }
+    
+    .dataset-checkbox input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+    }
+}

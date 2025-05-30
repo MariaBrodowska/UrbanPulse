@@ -18,12 +18,13 @@ public class InterestRatesService
     public List<InterestRateDto> GetAllInterestRates()
     {
         return _context.InterestRates
+            .Where(i => i.Date.Year >= 2015 && i.Date.Year < 2025) // Filtruj dane z lat 2015-2024
             .Include(i => i.TypeOfInterestRate)
             .Select(i => new InterestRateDto
             {
                 Id = i.Id,
                 Date = i.Date,
-                Rate = i.Rate,
+                Rate = i.Rate ,
                 TypeOfInterestRateId = i.TypeOfInterestRateId,
                 TypeOfInterestRateName = i.TypeOfInterestRate != null ? i.TypeOfInterestRate.Name : string.Empty
             })
@@ -39,7 +40,7 @@ public class InterestRatesService
             {
                 Id = i.Id,
                 Date = i.Date,
-                Rate = i.Rate,
+                Rate = i.Rate / 100,
                 TypeOfInterestRateId = i.TypeOfInterestRateId,
                 TypeOfInterestRateName = i.TypeOfInterestRate != null ? i.TypeOfInterestRate.Name : string.Empty
             })
@@ -48,9 +49,15 @@ public class InterestRatesService
 
     public List<InterestRateDto> GetInterestRatesByYear(int year) //zwraca srednia z kwartalow w danym roku
     {
-    var ratesForYear = _context.InterestRates
-        .Where(r => r.Date.Year == year)
-        .ToList();
+        // Sprawdź czy rok jest w dozwolonym zakresie 2015-2024
+        if (year < 2015 || year >= 2025)
+        {
+            return new List<InterestRateDto>();
+        }
+        
+        var ratesForYear = _context.InterestRates
+            .Where(r => r.Date.Year == year)
+            .ToList();
         
     if (!ratesForYear.Any())
     {
@@ -63,7 +70,7 @@ public class InterestRatesService
         {
             Id = 0,
             Date = new DateTime(year, 1, 1),
-            Rate = averageRate,
+            Rate = averageRate / 100,
             TypeOfInterestRateId = 0,
             TypeOfInterestRateName = "Średnia wszystkich stóp procentowych"
         }
@@ -72,14 +79,18 @@ public class InterestRatesService
 
     public List<InterestRateDto> GetInterestRatesByYears(int year1, int year2) //zwraca od danego roku do danego roku
     {
+        // Zapewniamy, że dane są z lat 2015-2024
+        int startYear = Math.Max(Math.Min(year1, year2), 2015);
+        int endYear = Math.Min(Math.Max(year1, year2), 2024);
+        
         return _context.InterestRates
             .Include(i => i.TypeOfInterestRate)
-            .Where(i => i.Date.Year >= year1 && i.Date.Year <= year2)
+            .Where(i => i.Date.Year >= startYear && i.Date.Year <= endYear)
             .Select(i => new InterestRateDto
             {
                 Id = i.Id,
                 Date = i.Date,
-                Rate = i.Rate,
+                Rate = i.Rate / 100,
                 TypeOfInterestRateId = i.TypeOfInterestRateId,
                 TypeOfInterestRateName = i.TypeOfInterestRate != null ? i.TypeOfInterestRate.Name : string.Empty
             })
@@ -114,7 +125,7 @@ public class InterestRatesService
             {
                 Id = interestRate.Id,
                 Date = interestRate.Date,
-                Rate = interestRate.Rate,
+                Rate = interestRate.Rate / 100,
                 TypeOfInterestRateId = interestRate.TypeOfInterestRateId,
                 TypeOfInterestRateName = typeOfInterestRate.Name
             };
@@ -166,7 +177,7 @@ public class InterestRatesService
             {
                 Id = interestRate.Id,
                 Date = interestRate.Date,
-                Rate = interestRate.Rate,
+                Rate = interestRate.Rate / 100,
                 TypeOfInterestRateId = interestRate.TypeOfInterestRateId,
                 TypeOfInterestRateName = interestRate.TypeOfInterestRate?.Name ?? string.Empty
             };
@@ -201,6 +212,7 @@ public class InterestRatesService
     public List<InterestRateDto> GetInterestRatesByCombinedFilters(int? id, int? yearRange, int? yearRange_2)
     {
         var query = _context.InterestRates
+            .Where(i => i.Date.Year >= 2015 && i.Date.Year < 2025) // Filtruj dane z lat 2015-2024
             .Include(i => i.TypeOfInterestRate)
             .AsQueryable();
 
@@ -227,7 +239,7 @@ public class InterestRatesService
             {
                 Id = i.Id,
                 Date = i.Date,
-                Rate = i.Rate,
+                Rate = i.Rate / 100,
                 TypeOfInterestRateId = i.TypeOfInterestRateId,
                 TypeOfInterestRateName = i.TypeOfInterestRate != null ? i.TypeOfInterestRate.Name : string.Empty
             })

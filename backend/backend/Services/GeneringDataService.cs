@@ -37,7 +37,7 @@ public class GeneringDataService
                 var id = pos.Attribute("id").Value;
                 var oprocentowanie = decimal.Parse(
                     pos.Attribute("oprocentowanie").Value,
-                    CultureInfo.InvariantCulture);
+                    CultureInfo.GetCultureInfo("pl-PL"));
                 
                 switch (id)
                 {

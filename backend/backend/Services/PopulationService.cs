@@ -19,6 +19,7 @@ public class PopulationService
     {
         return _context.Populations
             .Include(p => p.City)
+            .Where(p => p.Year >= 2015 && p.Year < 2025) // Filtruj dane z lat 2015-2024
             .OrderBy(p => p.Id)
             .Select(p => new PopulationDto
             {
@@ -49,6 +50,12 @@ public class PopulationService
 
     public List<PopulationDto> GetPopulationsByYear(int year)
     {
+        // Sprawdź czy rok jest w dozwolonym zakresie 2015-2024
+        if (year < 2015 || year >= 2025)
+        {
+            return new List<PopulationDto>();
+        }
+        
         return _context.Populations
             .Include(p => p.City)
             .Where(p => p.Year == year)
@@ -79,10 +86,11 @@ public class PopulationService
             .ToList();
     }
 
-    public List<PopulationDto> GetPopulationsByCombinedFilters(int? id = null, int? year = null, string? cityName = null)
+        public List<PopulationDto> GetPopulationsByCombinedFilters(int? id = null, int? year = null, string? cityName = null)
     {
         var query = _context.Populations
             .Include(p => p.City)
+            .Where(p => p.Year >= 2015 && p.Year < 2025) // Filtruj dane z lat 2015-2024
             .AsQueryable();
 
         if (id.HasValue)

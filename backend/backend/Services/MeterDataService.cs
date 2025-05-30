@@ -86,6 +86,7 @@ public class MeterDataService
     {
         var query = _context.MeterData
             .Include(m => m.City)
+            .Where(m => m.Year >= 2015 && m.Year < 2025) // Filtruj dane z lat 2015-2024
             .AsQueryable();
 
         if (isSecondaryMarket.HasValue)

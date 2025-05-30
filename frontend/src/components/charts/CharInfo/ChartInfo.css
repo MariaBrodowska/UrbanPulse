@@ -1,0 +1,113 @@
+/* === CHART INFO === */
+.chart-info {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(26, 26, 46, 0.6);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.chart-info:hover {
+    background: rgba(26, 26, 46, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.chart-info h4 {
+    margin: 0 0 15px 0;
+    color: #667eea;
+    font-size: 1.2em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.chart-info p {
+    margin: 8px 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.chart-info .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-info .info-item:last-child {
+    border-bottom: none;
+}
+
+.chart-info .info-label {
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+}
+
+.chart-info .info-value {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.chart-info .highlight {
+    color: #667eea;
+    font-weight: 700;
+}
+
+/* Data statistics */
+.data-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.stat-card {
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.stat-number {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #667eea;
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .chart-info {
+        padding: 15px;
+    }
+    
+    .chart-info h4 {
+        font-size: 1.1em;
+    }
+    
+    .data-stats {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 10px;
+    }
+    
+    .stat-number {
+        font-size: 1.3em;
+    }
+}

@@ -1,91 +1,231 @@
-/* In your App.css or DataCharts.css */
-.chart-wrapper {
-  height: 450px; /* This should give the canvas a proper rendering area */
-  width: 100%;
-  position: relative; /* Sometimes helps with child canvas positioning/sizing */
-}
-.chart-wrapper canvas {
-  max-height: 100%;
-  max-width: 100%;
-}
-/* Keep existing styles from previous App.css if they are relevant */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 20px;
-  background-color: #f4f7f6;
-  color: #333;
+/* Import component styles */
+@import '../../components/charts/DatasetSelector/DatasetSelector.css';
+@import '../../components/charts/ChartTypeSelector/ChartTypeSelector.css';
+@import '../../components/charts/CharFilters/ChartFilters.css';
+@import '../../components/charts/CharActions/ChartActions.css';
+@import '../../components/charts/CharContainer/ChartContainer.css';
+@import '../../components/charts/CharInfo/ChartInfo.css';
+
+* {
+    box-sizing: border-box;
 }
 
-.data-charts-container { /* Renamed from .App for clarity if used within a larger App */
-  max-width: 1200px;
-  margin: 0 auto;
+/* === CHARTS PAGE LAYOUT === */
+.charts-page {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+    color: #ffffff;
+    height: 100vh;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    width: 100vw;
+    margin: 5%;
 }
 
-h1 {
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 20px;
+.charts-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: backgroundShift 20s ease-in-out infinite;
 }
 
-/* Tab Navigation Styles */
-.tabs-navigation {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #ddd;
+@keyframes backgroundShift {
+    0%, 100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
+    33% { transform: translateX(-30px) translateY(-50px) rotate(1deg); }
+    66% { transform: translateX(20px) translateY(30px) rotate(-1deg); }
 }
 
-.tab-button {
-  padding: 10px 20px;
-  cursor: pointer;
-  border: none;
-  background-color: transparent;
-  font-size: 16px;
-  color: #555;
-  border-bottom: 3px solid transparent; /* For active indicator */
-  transition: color 0.3s ease, border-color 0.3s ease;
-  margin-right: 5px; /* Spacing between tabs */
+.charts-page > * {
+    position: relative;
+    z-index: 1;
 }
 
-.tab-button:hover {
-  color: #007bff;
+.charts-container {
+    padding: 20px;
+    position: relative;
+    z-index: 1;
 }
 
-.tab-button.active {
-  color: #007bff;
-  border-bottom-color: #007bff;
-  font-weight: bold;
+.charts-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px;
+    background: rgba(26, 26, 46, 0.8);
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Chart Content Area */
-.chart-content-area {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  /* min-height: 450px; Ensure there's space even if content is small */
+.charts-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+    animation: titleShine 8s linear infinite;
 }
 
-.chart-wrapper {
-  height: 450px; /* Or desired height for the chart canvas area */
-  width: 100%;
+.charts-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 3.5em;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
 }
 
-.chart-wrapper canvas {
-  max-height: 100%;
-  max-width: 100%;
+.charts-header p {
+    margin: 0;
+    font-size: 1.2em;
+    color: rgba(255, 255, 255, 0.8);
+    position: relative;
+    z-index: 1;
 }
 
-
-.status {
-  text-align: center;
-  font-size: 1.2em;
-  padding: 20px;
+.charts-content {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 30px;
+    min-height: calc(100vh - 280px);
 }
 
-.error {
-  color: red;
-  font-weight: bold;
+.charts-main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.charts-sidebar {
+    background: rgba(26, 26, 46, 0.85);
+    border-radius: 28px;
+    padding: 25px;
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+    overflow: hidden;
+    max-width: 380px;
+}
+
+.charts-sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    animation: menuGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleShine {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes menuGlow {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* === SHARED MENU SECTION STYLES === */
+.menu-section {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(102, 126, 234, 0.08);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+    background: rgba(102, 126, 234, 0.12);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+.menu-section h3 {
+    margin: 0 0 15px 0;
+    color: #ffffff;
+    font-size: 1.2em;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #667eea;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1400px) {
+    .charts-content {
+        grid-template-columns: 1fr 350px;
+        gap: 25px;
+    }
+    
+    .charts-sidebar {
+        max-width: 350px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .charts-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .charts-sidebar {
+        max-width: none;
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .charts-container {
+        padding: 15px;
+    }
+    
+    .charts-header h1 {
+        font-size: 2.5em;
+        letter-spacing: 2px;
+    }
+    
+    .charts-header p {
+        font-size: 1em;
+    }
+    
+    .charts-sidebar {
+        padding: 20px;
+        border-radius: 20px;
+    }
+    
+    .menu-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
 }

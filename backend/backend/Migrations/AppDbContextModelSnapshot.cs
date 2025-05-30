@@ -47,11 +47,11 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("Date")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("Rate")
-                        .HasColumnType("integer");
+                    b.Property<double>("Rate")
+                        .HasColumnType("double precision");
 
                     b.Property<int>("TypeOfInterestRateId")
                         .HasColumnType("integer");
@@ -74,19 +74,19 @@ namespace backend.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("integer");
 
-                    b.Property<bool?>("IsRealistic")
+                    b.Property<bool>("IsRealistic")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("IsSecondaryMarket")
+                    b.Property<bool>("IsSecondaryMarket")
                         .HasColumnType("boolean");
 
-                    b.Property<double?>("Price")
+                    b.Property<double>("Price")
                         .HasColumnType("double precision");
 
-                    b.Property<int?>("Quarter")
+                    b.Property<int>("Quarter")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Year")
+                    b.Property<int>("Year")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -107,10 +107,10 @@ namespace backend.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Number")
+                    b.Property<int>("Number")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Year")
+                    b.Property<int>("Year")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -129,6 +129,7 @@ namespace backend.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -145,6 +146,7 @@ namespace backend.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

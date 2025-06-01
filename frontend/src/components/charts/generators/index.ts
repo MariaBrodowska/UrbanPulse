@@ -1,3 +1,3 @@
 // Re-export all chart generators
 export { generateLineOrBarChart, generatePieChart } from './basicCharts';
-export { generateMultiAxisLineChart, generateCorrelationScatterPlot } from './advancedCharts';
+export { generateMultiAxisLineChart, generateCorrelationScatterPlot, generateTimeSeriesInterestRatesChart } from './advancedCharts';

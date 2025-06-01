@@ -81,6 +81,33 @@ function ChartContainer({
                         }
                     };
                 });
+            } else if (chartType === 'timeSeriesInterestRates' && chartData?.xAxisConfig && chartData?.yAxisConfig) {
+                // Konfiguracja dla wykresu czasowego stóp procentowych
+                scalesConfig.x = {
+                    ...chartData.xAxisConfig,
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    title: {
+                        ...chartData.xAxisConfig.title,
+                        color: 'white'
+                    }
+                };
+                scalesConfig.y = {
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    title: {
+                        ...chartData.yAxisConfig.title,
+                        color: 'white'
+                    }
+                };
             } else if (chartType === 'scatter' && chartData?.xAxisLabel && chartData?.yAxisLabel) {
                 // Konfiguracja dla wykresu punktowego
                 scalesConfig.x.title = {
@@ -131,6 +158,8 @@ function ChartContainer({
                 return 'Wykres Wieloosiowy';
             case 'scatter':
                 return 'Wykres Punktowy (Korelacja)';
+            case 'timeSeriesInterestRates':
+                return 'Stopy Procentowe w Czasie';
             default:
                 return 'Data Visualization';
         }
@@ -161,6 +190,7 @@ function ChartContainer({
             {chartType === 'pie' && <Pie data={chartData} options={chartOptions} />}
             {chartType === 'multiAxis' && <Line data={chartData} options={chartOptions} />}
             {chartType === 'scatter' && <Scatter data={chartData} options={chartOptions} />}
+            {chartType === 'timeSeriesInterestRates' && <Line data={chartData} options={chartOptions} />}
         </div>
     );
 }

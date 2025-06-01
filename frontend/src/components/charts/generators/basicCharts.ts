@@ -1,6 +1,14 @@
 import type { PopulationData, InterestRateData, MeterData } from '../types';
 import { CHART_COLORS, CHART_BORDER_COLORS } from '../utils/constants';
-import { logarithmicScale } from '../utils/helpers';
+import {
+    processPopulationData,
+    processInterestRateData,
+    processMeterData,
+    calculateAveragesByYear,
+    createDataset,
+    processDataForChart,
+    calculateOverallAverage
+} from '../utils/dataProcessors';
 
 // Generowanie danych dla wykresu liniowego/słupkowego
 export const generateLineOrBarChart = (
@@ -13,122 +21,87 @@ export const generateLineOrBarChart = (
     const datasets = [];
     let allLabels: string[] = [];
     let colorIndex = 0;
+    
+    // Process population data
+    const populationResult = processDataForChart(
+        populationDataInput,
+        processPopulationData,
+        selectedDatasets,
+        'population'
+    );
 
-    if (selectedDatasets.population && populationDataInput.length > 0) {
-        const populationByYear = populationDataInput.reduce((acc, item) => {
-            const key = `${item.year}`;
-            if (!acc[key]) acc[key] = [];
-            acc[key].push(item.number);
-            return acc;
-        }, {} as Record<string, number[]>);
-
-        const avgPopulationByYear = Object.keys(populationByYear).reduce((acc, year) => {
-            const numbers = populationByYear[year];
-            acc[year] = numbers.reduce((sum, num) => sum + num, 0) / numbers.length;
-            return acc;
-        }, {} as Record<string, number>);
-
-        const labels = Object.keys(avgPopulationByYear).sort();
+    if (populationResult) {
+        const { processedData, labels } = populationResult;
         allLabels = [...new Set([...allLabels, ...labels])];
 
-        const populationData = labels.reduce((acc, label) => {
-            acc[label] = avgPopulationByYear[label] || 0;
-            return acc;
-        }, {} as Record<string, number>);
-
-        const finalPopulationData = useLogarithmicScale ? logarithmicScale(populationData) : populationData;
-
-        datasets.push({
-            label: useLogarithmicScale ? 'Population (Avg, Log Scale)' : 'Population (Avg)',
-            data: finalPopulationData,
-            backgroundColor: CHART_COLORS[colorIndex % CHART_COLORS.length],
-            borderColor: CHART_BORDER_COLORS[colorIndex % CHART_BORDER_COLORS.length],
-            borderWidth: 2,
-            tension: 0.1
-        });
+        const dataset = createDataset(
+            useLogarithmicScale ? 'Population (Avg, Log Scale)' : 'Population (Avg)',
+            processedData,
+            colorIndex,
+            undefined,
+            useLogarithmicScale
+        );
+        datasets.push(dataset);
         colorIndex++;
     }
-
+  
+    // Process interest rate data
     if (selectedDatasets.interestRates && interestRateData.length > 0) {
-        // Grupuj stopy procentowe według lat i oblicz średnią dla każdego roku
-        const ratesByYear = interestRateData.reduce((acc, item) => {
-            const year = new Date(item.date).getFullYear().toString();
-            if (!acc[year]) acc[year] = [];
-            acc[year].push(item.rate);
-            return acc;
-        }, {} as Record<string, number[]>);
-
-        // Oblicz średnią dla każdego roku
-        const avgRatesByYear = Object.keys(ratesByYear).reduce((acc, year) => {
-            const rates = ratesByYear[year];
-            acc[year] = rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
-            return acc;
-        }, {} as Record<string, number>);
-
-        const labels = Object.keys(avgRatesByYear).sort();
+        const groupedData = processInterestRateData(interestRateData);
+        const averageData = calculateAveragesByYear(groupedData);
+        const labels = Object.keys(averageData).sort();
         allLabels = [...new Set([...allLabels, ...labels])];
 
-        const interestData = labels.reduce((acc, label) => {
-            acc[label] = avgRatesByYear[label] || 0;
+        // Use first value for each year for chart compatibility
+        const interestDataSingleValues = labels.reduce((acc, label) => {
+            acc[label] = averageData[label];
             return acc;
         }, {} as Record<string, number>);
 
-        const finalInterestData = useLogarithmicScale ? logarithmicScale(interestData) : interestData;
+        console.log(interestRateData);
 
-        datasets.push({
-            label: useLogarithmicScale ? 'Interest Rates (% Avg, Log Scale)' : 'Interest Rates (% Avg)',
-            data: finalInterestData,
-            backgroundColor: CHART_COLORS[colorIndex % CHART_COLORS.length],
-            borderColor: CHART_BORDER_COLORS[colorIndex % CHART_BORDER_COLORS.length],
-            borderWidth: 2,
-            tension: 0.1
-        });
+        const dataset = createDataset(
+            useLogarithmicScale ? 'Interest Rates (% Avg, Log Scale)' : 'Interest Rates (% Avg)',
+            interestDataSingleValues,
+            colorIndex,
+            undefined,
+            useLogarithmicScale
+        );
+        datasets.push(dataset);
         colorIndex++;
     }
 
-    if (selectedDatasets.meterData && meterData.length > 0) {
-        const pricesByYear = meterData.reduce((acc, item) => {
-            const key = `${item.year}`;
-            if (!acc[key]) acc[key] = [];
-            acc[key].push(item.price);
-            return acc;
-        }, {} as Record<string, number[]>);
+    // Process meter data
+    const meterResult = processDataForChart(
+        meterData,
+        processMeterData,
+        selectedDatasets,
+        'meterData'
+    );
 
-        const avgPricesByYear = Object.keys(pricesByYear).reduce((acc, year) => {
-            const prices = pricesByYear[year];
-            acc[year] = prices.reduce((sum, price) => sum + price, 0) / prices.length;
-            return acc;
-        }, {} as Record<string, number>);
-
-        const labels = Object.keys(avgPricesByYear).sort();
+    if (meterResult) {
+        const { processedData, labels } = meterResult;
         allLabels = [...new Set([...allLabels, ...labels])];
 
-        const meterDataProcessed = labels.reduce((acc, label) => {
-            acc[label] = avgPricesByYear[label] || 0;
-            return acc;
-        }, {} as Record<string, number>);
-
-        const finalMeterData = useLogarithmicScale ? logarithmicScale(meterDataProcessed) : meterDataProcessed;
-
-        datasets.push({
-            label: useLogarithmicScale ? 'Meter Data (Avg Price, Log Scale)' : 'Meter Data (Avg Price)',
-            data: finalMeterData,
-            backgroundColor: CHART_COLORS[colorIndex % CHART_COLORS.length],
-            borderColor: CHART_BORDER_COLORS[colorIndex % CHART_BORDER_COLORS.length],
-            borderWidth: 2,
-            tension: 0.1
-        });
+        const dataset = createDataset(
+            useLogarithmicScale ? 'Meter Data (Avg Price, Log Scale)' : 'Meter Data (Avg Price)',
+            processedData,
+            colorIndex,
+            undefined,
+            useLogarithmicScale
+        );
+        datasets.push(dataset);
         colorIndex++;
     }
 
-    // Sortowanie etykiet i mapowanie danych
+    // Sort labels and map data
     allLabels = [...new Set(allLabels)].sort();
     
     const mappedDatasets = datasets.map(dataset => ({
         ...dataset,
         data: allLabels.map(label => dataset.data[label] || 0)
     }));
-
+      
     return {
         labels: allLabels,
         datasets: mappedDatasets
@@ -150,7 +123,7 @@ export const generatePieChart = (
     let colorIndex = 0;
 
     if (selectedDatasets.population && populationData.length > 0) {
-        const avgPopulation = populationData.reduce((sum, item) => sum + item.number, 0) / populationData.length;
+        const avgPopulation = calculateOverallAverage(populationData, (item) => item.number);
         const finalPopulation = useLogarithmicScale && avgPopulation > 0 ? Math.log(avgPopulation) : avgPopulation;
         labels.push(useLogarithmicScale ? 'Avg Population (Log Scale)' : 'Avg Population');
         data.push(finalPopulation);
@@ -160,7 +133,7 @@ export const generatePieChart = (
     }
 
     if (selectedDatasets.interestRates && interestRateData.length > 0) {
-        const avgRate = interestRateData.reduce((sum, item) => sum + item.rate, 0) / interestRateData.length;
+        const avgRate = calculateOverallAverage(interestRateData, (item) => item.rate);
         const finalRate = useLogarithmicScale && avgRate > 0 ? Math.log(avgRate) : avgRate;
         labels.push(useLogarithmicScale ? 'Avg Interest Rate (Log Scale)' : 'Avg Interest Rate (%)');
         data.push(finalRate);
@@ -170,7 +143,7 @@ export const generatePieChart = (
     }
 
     if (selectedDatasets.meterData && meterData.length > 0) {
-        const avgPrice = meterData.reduce((sum, item) => sum + item.price, 0) / meterData.length;
+        const avgPrice = calculateOverallAverage(meterData, (item) => item.price);
         const finalPrice = useLogarithmicScale && avgPrice > 0 ? Math.log(avgPrice) : avgPrice;
         labels.push(useLogarithmicScale ? 'Avg Meter Price (Log Scale)' : 'Avg Meter Price');
         data.push(finalPrice);

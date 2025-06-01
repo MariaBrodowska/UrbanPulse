@@ -20,7 +20,8 @@ function ChartTypeSelector({
         { value: 'bar', label: 'Wykres Słupkowy' },
         { value: 'pie', label: 'Wykres Kołowy' },
         { value: 'multiAxis', label: 'Wykres Wieloosiowy' },
-        { value: 'scatter', label: 'Wykres Punktowy (Korelacji)' }
+        { value: 'scatter', label: 'Wykres Punktowy (Korelacji)' },
+        { value: 'timeSeriesInterestRates', label: 'Stopy Procentowe w Czasie' }
     ];
 
     // Jeśli używasz availableChartTypes:

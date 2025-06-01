@@ -101,7 +101,12 @@ function DisplayDatasetsPage() {
         setShowEditMenu(false);
         setDataToEdit({});
         setIsCreating(false)
+const defaultUrls = {
+        populations: "http://localhost:5000/api/population/",
+        interestrates: "http://localhost:5000/api/interest-rates/",
+        meterdata: "http://localhost:5000/api/flat-prices/"
     };
+    handleData(defaultUrls[currentDataset as keyof typeof defaultUrls]);    };
                         
     
     if (isLoading) {

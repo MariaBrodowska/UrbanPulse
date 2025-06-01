@@ -50,9 +50,11 @@ public class PopulationController : ControllerBase
     public ActionResult<List<PopulationDto>> GetPopulationsByCombinedFilters(
         [FromQuery] int? id = null, 
         [FromQuery] int? year = null, 
-        [FromQuery] string? city = null)
+        [FromQuery] string? city = null,
+         [FromQuery] int? yearRange = null,
+        [FromQuery] int? yearRange_2 = null)
     {
-        var populations = _populationService.GetPopulationsByCombinedFilters(id, year, city);
+        var populations = _populationService.GetPopulationsByCombinedFilters(id, year, city, yearRange, yearRange_2);
         return Ok(populations);
     }
 

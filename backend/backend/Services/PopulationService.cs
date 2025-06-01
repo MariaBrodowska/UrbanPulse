@@ -86,12 +86,16 @@ public class PopulationService
             .ToList();
     }
 
-        public List<PopulationDto> GetPopulationsByCombinedFilters(int? id = null, int? year = null, string? cityName = null)
+        public List<PopulationDto> GetPopulationsByCombinedFilters(int? id = null, int? year = null, string? cityName = null,int? yearFrom = null, int? yearTo = null)
     {
         var query = _context.Populations
             .Include(p => p.City)
-            .Where(p => p.Year >= 2015 && p.Year < 2025) // Filtruj dane z lat 2015-2024
             .AsQueryable();
+
+        int fromYear = yearFrom ?? 2015;
+        int toYear = yearTo ?? 2024;
+        
+        query = query.Where(m => m.Year >= fromYear && m.Year <= toYear);
 
         if (id.HasValue)
         {

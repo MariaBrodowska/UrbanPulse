@@ -18,7 +18,8 @@ export type {
     ChartDataSet,
     ChartData,
     MultiAxisChartData,
-    ScatterPlotData
+    ScatterPlotData,
+    TimeSeriesInterestRateData
 } from './types';
 
 // Export utility functions
@@ -27,6 +28,7 @@ export {
     generatePieChart,
     generateMultiAxisLineChart,
     generateCorrelationScatterPlot,
+    generateTimeSeriesInterestRatesChart,
     buildFilterUrl,
     CHART_COLORS,
     CHART_BORDER_COLORS

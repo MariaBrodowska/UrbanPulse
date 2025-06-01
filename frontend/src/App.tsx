@@ -5,10 +5,12 @@ import DisplayLoginPage from './user/login/Login'
 import DisplayDatasetsPage from './data/datasets/Datasets'
 import DataCharts from './data/charts/Charts'
 import ProtectedRoute from './components/ProtectedRoute'
+import LandingPage from './Landing/LandingPage'
 
 function App() {
   return (
     <Routes>
+      <Route path='/' element={<LandingPage/>}/>
       <Route path="/login" element={<DisplayLoginPage />} />
       <Route path="/register" element={<DisplayRegisterPage />} />
       <Route 

@@ -59,7 +59,7 @@ const EditMenu = ({ data, datasetType, onClose,isCreating = false }: EditMenuPro
         console.log('Zapisywanie danych:', formData);
         try{
           const resp =  await axios.put(url,formData,{withCredentials:true});
-          console.log(resp);
+          onClose?.();
         }
        catch(error){
         console.log(error);
@@ -68,7 +68,7 @@ const EditMenu = ({ data, datasetType, onClose,isCreating = false }: EditMenuPro
     const handleSave = async () => {
         try{
             const resp = await axios.post(url,formData, {withCredentials:true});
-            console.log(resp)
+            onClose?.();  
         }
         catch(error){
             console.log(error);

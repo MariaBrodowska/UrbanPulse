@@ -26,24 +26,13 @@ export interface MeterData {
 }
 
 export interface FilterState {
-    populations: {
-        id?: string;
+
         year?: string;
         city?: string;
         yearRange?: string;
         yearRange_2?: string;
-    };
-    interestrates: {
-        id?: string;
-        yearRange?: string;
-        yearRange_2?: string;
-    };
-    meterdata: {
-        id?: string;
-        market?: string;
-        sales?: string;
-        city?: string;
-    };
+    
+   
 }
 
 export interface SelectedDatasets {
@@ -71,7 +60,7 @@ export interface ChartData {
 }
 
 // Rozszerzone typy wykresów
-export type ChartType = 'line' | 'bar' | 'pie' | 'scatter' | 'multiAxis';
+export type ChartType = 'line' | 'bar' | 'pie' | 'scatter' | 'multiAxis' | 'timeSeriesInterestRates';
 
 // Typ dla danych z wieloma osiami Y
 export interface MultiAxisChartData {
@@ -82,6 +71,14 @@ export interface MultiAxisChartData {
             label: string;
             position: 'left' | 'right';
             color: string;
+        };
+    
+    };
+    xAxes?: {
+        [key: string]: {
+            label: string;
+            position: 'top' | 'bottom';
+            type: string;
         };
     };
 }
@@ -98,4 +95,37 @@ export interface ScatterPlotData {
     }>;
     xAxisLabel: string;
     yAxisLabel: string;
+}
+
+// Typ dla wykresu czasowego stóp procentowych
+export interface TimeSeriesInterestRateData {
+    labels: string[];
+    datasets: Array<{
+        label: string;
+        data: Array<{ x: string; y: number }>;
+        backgroundColor: string;
+        borderColor: string;
+        borderWidth: number;
+        tension: number;
+        fill: boolean;
+    }>;
+    xAxisConfig: {
+        type: 'time';
+        time: {
+            unit: 'month' | 'quarter' | 'year';
+            displayFormats: {
+                [key: string]: string;
+            };
+        };
+        title: {
+            display: boolean;
+            text: string;
+        };
+    };
+    yAxisConfig: {
+        title: {
+            display: boolean;
+            text: string;
+        };
+    };
 }

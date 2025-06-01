@@ -82,12 +82,17 @@ public class MeterDataService
             .ToList();
     }
 
-    public List<MeterDataDto> GetMeterDataCombined(bool? isSecondaryMarket = null, bool? isRealistic = null, int? id = null, string? cityName = null)
+    public List<MeterDataDto> GetMeterDataCombined(bool? isSecondaryMarket = null, bool? isRealistic = null, int? id = null, string? cityName = null, int? yearFrom = null, int? yearTo = null)
     {
         var query = _context.MeterData
             .Include(m => m.City)
-            .Where(m => m.Year >= 2015 && m.Year < 2025) // Filtruj dane z lat 2015-2024
             .AsQueryable();
+
+        // Filtruj zakres lat - jeśli nie podano parametrów, używaj domyślnego zakresu 2015-2024
+        int fromYear = yearFrom ?? 2015;
+        int toYear = yearTo ?? 2024;
+        
+        query = query.Where(m => m.Year >= fromYear && m.Year <= toYear);
 
         if (isSecondaryMarket.HasValue)
         {

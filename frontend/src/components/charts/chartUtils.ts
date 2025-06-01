@@ -5,5 +5,6 @@ export {
     generateLineOrBarChart, 
     generatePieChart,
     generateMultiAxisLineChart,
-    generateCorrelationScatterPlot
+    generateCorrelationScatterPlot,
+    generateTimeSeriesInterestRatesChart
 } from './generators';

@@ -67,9 +67,11 @@ public class MeterDataController : ControllerBase
         [FromQuery] bool? market = null,
         [FromQuery] bool? sales = null,
         [FromQuery] int? id = null,
-        [FromQuery] string? city = null)
+        [FromQuery] string? city = null,
+        [FromQuery] int? yearRange = null,
+        [FromQuery] int? yearRange_2 = null)
     {
-        var meterData = _MeterDataService.GetMeterDataCombined(market, sales, id, city);
+        var meterData = _MeterDataService.GetMeterDataCombined(market, sales, id, city, yearRange, yearRange_2);
         return Ok(meterData);
     }
 

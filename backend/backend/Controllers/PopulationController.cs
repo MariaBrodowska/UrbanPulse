@@ -58,7 +58,8 @@ public class PopulationController : ControllerBase
         return Ok(populations);
     }
 
-    [HttpPost("with-city")]
+    [HttpPost("")]
+
     public async Task<ActionResult<PopulationDto>> AddPopulationWithCity([FromBody] CreatePopulationDto dto)
     {
         try
@@ -70,10 +71,10 @@ public class PopulationController : ControllerBase
         {
             return Conflict(ex.Message);
         }
-        
+
     }
 
-    [HttpPost("")]
+    [HttpPost("wi")]
     public async Task<ActionResult<PopulationDto>> AddPopulation([FromBody] CreatePopulationWithCityIdDto dto)
     {
         try

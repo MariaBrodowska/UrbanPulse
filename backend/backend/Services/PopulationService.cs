@@ -19,7 +19,7 @@ public class PopulationService
     {
         return _context.Populations
             .Include(p => p.City)
-            .Where(p => p.Year >= 2015 && p.Year < 2025) // Filtruj dane z lat 2015-2024
+            .Where(p => p.Year >= 2015 && p.Year < 2025) 
             .OrderBy(p => p.Id)
             .Select(p => new PopulationDto
             {
@@ -50,8 +50,7 @@ public class PopulationService
 
     public List<PopulationDto> GetPopulationsByYear(int year)
     {
-        // Sprawdź czy rok jest w dozwolonym zakresie 2015-2024
-        if (year < 2015 || year >= 2025)
+         if (year < 2015 || year >= 2025)
         {
             return new List<PopulationDto>();
         }
@@ -214,11 +213,9 @@ public class PopulationService
             return null;
         }
 
-        // Update number and year
         population.Number = number;
         population.Year = year;
 
-        // Handle city update if cityName is provided and different
         if (!string.IsNullOrEmpty(cityName) && 
             (population.City == null || !population.City.Name.Equals(cityName, StringComparison.OrdinalIgnoreCase)))
         {
@@ -242,7 +239,6 @@ public class PopulationService
 
         await _context.SaveChangesAsync();
 
-        // Reload to get updated city information
         population = await _context.Populations
             .Include(p => p.City)
             .FirstOrDefaultAsync(p => p.Id == id);

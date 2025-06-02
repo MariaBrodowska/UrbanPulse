@@ -18,7 +18,7 @@ public class InterestRatesService
     public List<InterestRateDto> GetAllInterestRates()
     {
         return _context.InterestRates
-            .Where(i => i.Date.Year >= 2015 && i.Date.Year < 2025) // Filtruj dane z lat 2015-2024
+            .Where(i => i.Date.Year >= 2015 && i.Date.Year < 2025) 
             .Include(i => i.TypeOfInterestRate)
             .Select(i => new InterestRateDto
             {
@@ -47,9 +47,8 @@ public class InterestRatesService
             .FirstOrDefault();
     }
 
-    public List<InterestRateDto> GetInterestRatesByYear(int year) //zwraca srednia z kwartalow w danym roku
+    public List<InterestRateDto> GetInterestRatesByYear(int year) 
     {
-        // Sprawdź czy rok jest w dozwolonym zakresie 2015-2024
         if (year < 2015 || year >= 2025)
         {
             return new List<InterestRateDto>();
@@ -77,9 +76,8 @@ public class InterestRatesService
     };
     }
 
-    public List<InterestRateDto> GetInterestRatesByYears(int year1, int year2) //zwraca od danego roku do danego roku
+    public List<InterestRateDto> GetInterestRatesByYears(int year1, int year2) 
     {
-        // Zapewniamy, że dane są z lat 2015-2024
         int startYear = Math.Max(Math.Min(year1, year2), 2015);
         int endYear = Math.Min(Math.Max(year1, year2), 2024);
         
@@ -148,14 +146,12 @@ public class InterestRatesService
                 return null;
             }
 
-            // Check if the new TypeOfInterestRate exists
             var typeOfInterestRate = await _context.TypeOfInterestRates.FindAsync(typeOfInterestRateId);
             if (typeOfInterestRate == null)
             {
                 throw new ArgumentException($"Type of interest rate with ID {typeOfInterestRateId} not found.");
             }
 
-            // Check for duplicate entries (same date and type, but different id)
             var existingInterestRate = await _context.InterestRates
                 .FirstOrDefaultAsync(i => i.Date == date && i.TypeOfInterestRateId == typeOfInterestRateId && i.Id != id);
             if (existingInterestRate != null)
@@ -170,7 +166,6 @@ public class InterestRatesService
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
             
-            // Reload the entity to get the updated TypeOfInterestRate
             await _context.Entry(interestRate).Reference(i => i.TypeOfInterestRate).LoadAsync();
             
             return new InterestRateDto
@@ -212,17 +207,15 @@ public class InterestRatesService
     public List<InterestRateDto> GetInterestRatesByCombinedFilters(int? id, int? yearRange, int? yearRange_2)
     {
         var query = _context.InterestRates
-            .Where(i => i.Date.Year >= 2015 && i.Date.Year < 2025) // Filtruj dane z lat 2015-2024
+            .Where(i => i.Date.Year >= 2015 && i.Date.Year < 2025) 
             .Include(i => i.TypeOfInterestRate)
             .AsQueryable();
 
-        // Filter by ID if provided
         if (id.HasValue)
         {
             query = query.Where(i => i.Id == id.Value);
         }
 
-        // Filter by year range if provided
         if (yearRange.HasValue && yearRange_2.HasValue)
         {
             int startYear = Math.Min(yearRange.Value, yearRange_2.Value);

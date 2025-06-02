@@ -15,9 +15,9 @@ function ScatterAxisSelector({
     onYAxisChange
 }: ScatterAxisSelectorProps) {
     const axisOptions = [
-        { value: 'population' as const, label: 'Populacja' },
-        { value: 'interestRates' as const, label: 'Stopy Procentowe' },
-        { value: 'meterData' as const, label: 'Ceny Mieszkań' }
+        { value: 'population' as const, label: 'Population' },
+        { value: 'interestRates' as const, label: 'Interest Rates' },
+        { value: 'meterData' as const, label: 'Meter Data' }
     ];
 
     return (
@@ -56,7 +56,7 @@ function ScatterAxisSelector({
                 
                 {xAxisData === yAxisData && (
                     <div className="warning">
-                        ⚠️ Wybierz różne zmienne dla osi X i Y, aby zobaczyć korelację
+                        ⚠️ Take diffrent datasets for X and Y axis
                     </div>
                 )}
             </div>

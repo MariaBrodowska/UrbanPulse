@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import "./Datasets.css"
 import GetFilters from "./Filters"
 import axios from "axios"
-import React, { use, useState } from "react"
+import React, {  useEffect, useState } from "react"
 import Pagination from "../../components/Pagination"
 import { RenderTable } from "./renderTableFunctions"
 import Navbar from "../../components/Navbar"
@@ -22,13 +22,17 @@ function DisplayDatasetsPage() {
     const [showEditMenu, setShowEditMenu] = useState(false);
     const [dataToEdit,setDataToEdit] = useState<Object>({})
     const [isCreating, setIsCreating] = useState(false);
-    React.useEffect(() => {
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isSucces, setIsSucces] = useState(false)
+    useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/api/users/me', {
                     withCredentials: true
                 });
                 setUserEmail(response.data.email);
+                setIsAdmin(response.data.isAdmin);
+                console.log(response.data.isAdmin);
             } catch (error) {
                 console.error('Błąd podczas pobierania danych użytkownika:', error);
             }
@@ -88,14 +92,17 @@ function DisplayDatasetsPage() {
     React.useEffect(() => {
         handleData("http://localhost:5000/api/population/");
     }, []);
-    const createData = () => {
-        setShowEditMenu(true);
-        setIsCreating(true)
-    }
+  
     const editData = (data: Object) => {
         setShowEditMenu(true);
         setDataToEdit(data);
+        const defaultUrls = {
+        populations: "http://localhost:5000/api/population/",
+        interestrates: "http://localhost:5000/api/interest-rates/",
+        meterdata: "http://localhost:5000/api/flat-prices/"
     };
+    handleData(defaultUrls[currentDataset as keyof typeof defaultUrls]);    };
+   
 
     const closeEditMenu = () => {
         setShowEditMenu(false);
@@ -108,13 +115,26 @@ const defaultUrls = {
     };
     handleData(defaultUrls[currentDataset as keyof typeof defaultUrls]);    };
                         
-    
+  const handleSuccessfulSave = () => {
+    setIsSucces(true);
+    setTimeout(() => {
+        setIsSucces(false);
+    }, 3000);
+};  
     if (isLoading) {
         return <div><p>Loading..</p></div>
     } else {
         return (
             <>
             <Navbar userEmail={userEmail} />
+            {isSucces && (
+            <div className="success-notification">
+                <p>✅ Record successfully added!</p>
+                <button onClick={() => setIsSucces(false)} className="close-notification">
+                    ×
+                </button>
+            </div>
+        )}
             <div id="datasetsdiv">
                 <div id="datasetmenutitle">
                     <h1>Datasets</h1>
@@ -123,7 +143,7 @@ const defaultUrls = {
                     <div id="datasetmenu">
                         <div className="menu-section">
                             <div className="dataset-selector">
-                                <h3 id="dataset-text">Wybierz dataset</h3>
+                                <h3 id="dataset-text">Select dataset</h3>
                                 <select 
                                     value={currentDataset} 
                                     id="datasetselect" 
@@ -157,15 +177,17 @@ const defaultUrls = {
                             </div>
                             
                             <div className="dataset-info">
-                                <h3>Informacje o datasecie</h3>
-                                <p>Aktualny dataset: <strong>{currentDataset}</strong></p>
-                                <p>Liczba rekordów: <strong>{allData.length}</strong></p>
-                                <p>Aktualna strona: <strong>{currentPage}</strong> z <strong>{totalPages}</strong></p>
+                                <h3>Dataset Information</h3>
+                                <p>Current dataset: <strong>{currentDataset}</strong></p>
+                                <p> Record number: <strong>{allData.length}</strong></p>
+                                <p>Current page: <strong>{currentPage}</strong> z <strong>{totalPages}</strong></p>
                             </div>
                         </div>
+                        {isAdmin&&
                         <button className="apply-filters-btn" onClick={() => {editData(dataToEdit); setIsCreating(true)}}>
-                            <h4>Dodaj nowy rekord</h4>
+                            <h4>Add new record</h4>
                         </button>
+    }
                     </div>
                     <div id="datasetdisplay">
                         <RenderTable objects={data} onClick={(data) =>{
@@ -180,12 +202,13 @@ const defaultUrls = {
                     </div>
                 </div>
             </div>
-           {showEditMenu && (
+           {showEditMenu && isAdmin &&(
             <EditMenu 
                 data={dataToEdit} 
                 datasetType={currentDataset} 
                 onClose={closeEditMenu}
                 isCreating={isCreating}
+                onSucess={handleSuccessfulSave}
             />
            )}
             </>

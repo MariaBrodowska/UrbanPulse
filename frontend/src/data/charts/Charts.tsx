@@ -126,7 +126,7 @@ function ChartsPage() {
 
             if (selectedDatasets.population) {
                 const populationUrl = buildFilterUrl(`${API_BASE_URL}/population/combined`, filters);
-                console.log(populationUrl)
+               // console.log(populationUrl)
                 console.log("Population filters",filters)
                 requests.push(
                     axios.get(populationUrl,{withCredentials:true}).then(response => ({ type: 'population', data: response.data }))
@@ -134,18 +134,18 @@ function ChartsPage() {
             }
 
             if (selectedDatasets.interestRates) {
-                console.log("rates filters", filters)
+             //   console.log("rates filters", filters)
                 const interestRateUrl = buildFilterUrl(`${API_BASE_URL}/interest-rates/combined`, filters);
-                console.log(interestRateUrl)
+               // console.log(interestRateUrl)
                 requests.push(
                     axios.get(interestRateUrl,{withCredentials:true}).then(response => ({ type: 'interestRates', data: response.data }))
                 );
             }
 
             if (selectedDatasets.meterData) {
-                console.log("flat filters", filters)
+              //  console.log("flat filters", filters)
                 const meterDataUrl = buildFilterUrl(`${API_BASE_URL}/flat-prices/combined`, filters);
-                console.log(meterDataUrl)
+               // console.log(meterDataUrl)
                 requests.push(
                     axios.get(meterDataUrl,{withCredentials:true}).then(response => ({ type: 'meterData', data: response.data }))
                 );
@@ -158,12 +158,12 @@ function ChartsPage() {
 
             const responses = await Promise.all(requests);
             
-            // Initialize new data arrays
+            
             let newPopulationData: PopulationData[] = [];
             let newInterestRateData: InterestRateData[] = [];
             let newMeterDataList: MeterData[] = [];
 
-            // Process responses and update data
+           
             responses.forEach(response => {
                 console.log('Processing response:', response.type, response.data.length, 'items');
                 switch (response.type) {
@@ -268,8 +268,8 @@ function ChartsPage() {
             
             <div className="charts-container">
                 <div className="charts-header">
-                    <h1>Data Visualization</h1>
-                    <p>Create interactive charts from multiple data sources</p>
+                    <h1>Charts</h1>
+                    <p>Create interactive charts from population, meter  and interest rate data</p>
                 </div>
 
                 <div className="charts-content">

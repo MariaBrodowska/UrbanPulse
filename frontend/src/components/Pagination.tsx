@@ -53,7 +53,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
             </button>
             
             <span className="pagination-info">
-                Strona {currentPage} z {totalPages}
+              Page {currentPage} / {totalPages}
             </span>
         </div>
     );

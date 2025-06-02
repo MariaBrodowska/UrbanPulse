@@ -192,3 +192,31 @@
     border-color: var(--primary-300);
     transform: translateY(-1px);
 }
+/* ...existing code... */
+
+.form-input.error,
+.form-select.error {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+.submit-error {
+    background-color: #fee;
+    border: 1px solid #e74c3c;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

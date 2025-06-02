@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import type { FilterState, SelectedDatasets } from '../types';
 import './ChartFilters.css';
 

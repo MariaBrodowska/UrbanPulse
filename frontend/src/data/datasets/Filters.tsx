@@ -12,21 +12,21 @@ function GetFilters({ currentDataset, onApplyFilters }: GetFiltersProps) {
         switch (dataset) {
             case "populations":
                 return [
-                    { type: "id", label: "Filtruj po ID", inputType: "text", placeholder: "Wpisz ID" },
-                    { type: "year", label: "Filtruj po roku", inputType: "number", placeholder: "np. 2023" },
-                    { type: "city", label: "Filtruj po mieście", inputType: "text", placeholder: "Nazwa miasta" }
+                    { type: "id", label: "Filter by ID", inputType: "text", placeholder: "ID" },
+                    { type: "year", label: "Filter by year", inputType: "number", placeholder: " 2023" },
+                    { type: "city", label: "Filter by city", inputType: "text", placeholder: "City" }
                 ];
             case "interestrates":
                 return [
-                    { type: "id", label: "Filtruj po ID", inputType: "text", placeholder: "Wpisz ID" },
-                    { type: "yearRange", label: "Filtruj po zakresie lat", inputType: "range", placeholder: "Od roku" }
+                    { type: "id", label: "Filter by ID", inputType: "text", placeholder: "ID" },
+                    { type: "yearRange", label: "Filtruj by year range", inputType: "range", placeholder: "From year" }
                 ];
             case "meterdata":
                 return [
-                    { type: "id", label: "Filtruj po ID", inputType: "text", placeholder: "Wpisz ID" },
-                    { type: "market", label: "Rynek wtórny", inputType: "toggle" },
-                    { type: "sales", label: "Ceny realistyczne", inputType: "toggle" },
-                    { type: "city", label: "Filtruj po mieście", inputType: "text", placeholder: "Nazwa miasta" }
+                    { type: "id", label: "Filter by ID", inputType: "text", placeholder: "ID" },
+                    { type: "market", label: "Secondary market", inputType: "toggle" },
+                    { type: "sales", label: "Realistic values", inputType: "toggle" },
+                    { type: "city", label: "Filter by city", inputType: "text", placeholder: "City" }
                 ];
             default:
                 return [];
@@ -126,7 +126,7 @@ function GetFilters({ currentDataset, onApplyFilters }: GetFiltersProps) {
                                     <span className="toggle-slider"></span>
                                 </label>
                                 <span className="toggle-label">
-                                    {inputValues[filter.type] === "true" ? "Tak" : "Nie"}
+                                    {inputValues[filter.type] === "true" ? "Yes" : "No"}
                                 </span>
                             </div>
                         </div>
@@ -142,7 +142,7 @@ function GetFilters({ currentDataset, onApplyFilters }: GetFiltersProps) {
                             <div className="range-inputs">
                                 <input
                                     type="number"
-                                    placeholder="Od roku"
+                                    placeholder="From year"
                                     value={inputValues[filter.type] || ""}
                                     onChange={(e) => handleInputChange(filter.type, e.target.value)}
                                     onKeyPress={(e) => {
@@ -153,7 +153,7 @@ function GetFilters({ currentDataset, onApplyFilters }: GetFiltersProps) {
                                 />
                                 <input
                                     type="number"
-                                    placeholder="Do roku"
+                                    placeholder="To year"
                                     value={inputValues[`${filter.type}_2`] || ""}
                                     onChange={(e) => handleInputChange(filter.type, e.target.value, true)}
                                     onKeyPress={(e) => {
@@ -194,7 +194,7 @@ function GetFilters({ currentDataset, onApplyFilters }: GetFiltersProps) {
 
     return (
         <div className="filters-container">
-            <h3>Dostępne filtry</h3>
+            <h3>Avalaible filters</h3>
             <div className="filters-grid">
                 {availableFilters.map((filter) => (
                     <div key={filter.type}>
@@ -204,10 +204,10 @@ function GetFilters({ currentDataset, onApplyFilters }: GetFiltersProps) {
             </div>
             <div className="filter-actions">
                 <button className="apply-filters-btn" onClick={handleApplyAllFilters}>
-                    Zastosuj filtry
+                    Apply filters
                 </button>
                 <button className="clear-filters-btn" onClick={handleClearFilters}>
-                    Wyczyść wszystkie filtry
+                    Clear All
                 </button>
             </div>
         </div>

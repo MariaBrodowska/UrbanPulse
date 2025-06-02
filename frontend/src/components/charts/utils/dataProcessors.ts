@@ -2,13 +2,10 @@ import type { PopulationData, InterestRateData, MeterData } from '../types';
 import { CHART_COLORS, CHART_BORDER_COLORS } from './constants';
 import { logarithmicScale } from './helpers';
 
-// Type definitions for reusable functions
 export type DataProcessor<T> = (data: T[]) => Record<string, number[]>;
 export type AverageCalculator = (grouped: Record<string, number[]>) => Record<string, number>;
 
-// Process interest rate data for time series (preserving exact dates)
 export const processInterestRateDataForTimeSeries = (data: InterestRateData[]) => {
-    // Group by type and preserve dates
     const groupedByType: Record<string, Array<{ date: string; rate: number }>> = {};
     
     data.forEach(item => {
@@ -22,7 +19,7 @@ export const processInterestRateDataForTimeSeries = (data: InterestRateData[]) =
         });
     });
 
-    // Sort data by date for each type
+
     Object.keys(groupedByType).forEach(type => {
         groupedByType[type].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     });
@@ -30,7 +27,6 @@ export const processInterestRateDataForTimeSeries = (data: InterestRateData[]) =
     return groupedByType;
 };
 
-// Calculate averages from grouped data
 export const calculateAveragesByYear: AverageCalculator = (groupedData) => {
     return Object.keys(groupedData).reduce((acc, year) => {
         const values = groupedData[year];
@@ -39,7 +35,6 @@ export const calculateAveragesByYear: AverageCalculator = (groupedData) => {
     }, {} as Record<string, number>);
 };
 
-// Data processors for different data types
 export const processPopulationData: DataProcessor<PopulationData> = (data) => {
     return data.reduce((acc, item) => {
         const key = `${item.year}`;
@@ -67,7 +62,6 @@ export const processMeterData: DataProcessor<MeterData> = (data) => {
     }, {} as Record<string, number[]>);
 };
 
-// Create dataset with consistent styling
 export const createDataset = (
     label: string,
     data: Record<string, number>,
@@ -93,7 +87,6 @@ export const createDataset = (
     return dataset;
 };
 
-// Create Y-axis configuration
 export const createYAxis = (
     label: string,
     position: 'left' | 'right',
@@ -104,7 +97,6 @@ export const createYAxis = (
     color: CHART_BORDER_COLORS[colorIndex % CHART_BORDER_COLORS.length]
 });
 
-// Process data for chart labels
 export const processDataForLabels = (
     processedData: Record<string, number>,
     allLabels: string[]
@@ -118,14 +110,12 @@ export const processDataForLabels = (
     }, {} as Record<string, number>);
 };
 
-// Generate axis labels with logarithmic scale support
 export const getAxisLabels = (useLogarithmicScale: boolean) => ({
     population: useLogarithmicScale ? 'Population (Log Scale)' : 'Population',
     interestRates: useLogarithmicScale ? 'Interest Rates (% Log Scale)' : 'Interest Rates (%)',
     meterData: useLogarithmicScale ? 'Price (Log Scale)' : 'Price'
 });
 
-// Process data for scatter plot
 export const processDataForScatterPlot = (
     populationDataInput: PopulationData[],
     interestRateData: InterestRateData[],
@@ -133,7 +123,6 @@ export const processDataForScatterPlot = (
 ): { [year: string]: { population?: number; interestRates?: number; meterData?: number } } => {
     const processedData: { [year: string]: { population?: number; interestRates?: number; meterData?: number } } = {};
 
-    // Process population data
     if (populationDataInput.length > 0) {
         const groupedData = processPopulationData(populationDataInput);
         const averageData = calculateAveragesByYear(groupedData);
@@ -144,7 +133,6 @@ export const processDataForScatterPlot = (
         });
     }
 
-    // Process interest rate data
     if (interestRateData.length > 0) {
         const groupedData = processInterestRateData(interestRateData);
         const averageData = calculateAveragesByYear(groupedData);
@@ -155,7 +143,6 @@ export const processDataForScatterPlot = (
         });
     }
 
-    // Process meter data
     if (meterData.length > 0) {
         const groupedData = processMeterData(meterData);
         const averageData = calculateAveragesByYear(groupedData);
@@ -169,13 +156,11 @@ export const processDataForScatterPlot = (
     return processedData;
 };
 
-// Calculate average for pie chart segments
 export const calculateOverallAverage = (data: any[], getValue: (item: any) => number): number => {
     if (data.length === 0) return 0;
     return data.reduce((sum, item) => sum + getValue(item), 0) / data.length;
 };
 
-// Process data and generate final dataset for basic charts
 export const processDataForChart = (
     data: any[],
     processor: DataProcessor<any>,

@@ -88,7 +88,6 @@ public class MeterDataService
             .Include(m => m.City)
             .AsQueryable();
 
-        // Filtruj zakres lat - jeśli nie podano parametrów, używaj domyślnego zakresu 2015-2024
         int fromYear = yearFrom ?? 2015;
         int toYear = yearTo ?? 2024;
         
@@ -264,7 +263,6 @@ public class MeterDataService
                 return null;
             }
 
-            // Validate input
             if (quarter < 1 || quarter > 4)
             {
                 throw new ArgumentException("Quarter must be between 1 and 4.");
@@ -274,7 +272,6 @@ public class MeterDataService
                 throw new ArgumentException("Price can't be negative.");
             }
 
-            // Handle city update if cityName is provided and different
             City? city = null;
             if (!string.IsNullOrEmpty(cityName) && !cityName.Equals(meterData.City?.Name, StringComparison.OrdinalIgnoreCase))
             {
@@ -299,8 +296,7 @@ public class MeterDataService
                 meterData.CityId = cityId;
             }
 
-            // Check for duplicate entries (excluding the current record)
-            // Only check if we're actually changing city, year, quarter, or market type
+           
             var existingMeterData = await _context.MeterData
                 .FirstOrDefaultAsync(m => m.Id != id && 
                                         m.CityId == meterData.CityId && 
@@ -317,7 +313,6 @@ public class MeterDataService
                 throw new InvalidOperationException($"Meter data for {cityNameForError} in {year} Q{quarter} ({marketType} market, {salesType} prices) already exists.");
             }
 
-            // Update all fields
             meterData.Year = year;
             meterData.Price = price;
             meterData.Quarter = quarter;
@@ -327,7 +322,6 @@ public class MeterDataService
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
             
-            // Reload to get updated city information
             var updatedMeterData = await _context.MeterData
                 .Include(m => m.City)
                 .FirstOrDefaultAsync(m => m.Id == id);

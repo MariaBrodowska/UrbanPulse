@@ -272,7 +272,32 @@ projektIntegracja/
 docker-compose ps
 
 # View logs
-docker-compose logs
+doCheck if PostgreSQL is running
+docker-compose exec postgres pg_isready
+
+# Reset database
+docker-compose down -v
+docker-compose up -d
+```
+
+#### Frontend not loading
+```bash
+# Check if port 5173 is available
+lsof -i :5173
+
+# Rebuild frontend container
+docker-compose build frontend
+docker-compose up -d frontend
+```
+
+#### Backend API errors
+```bash
+# Check backend logs
+docker-compose logs backend
+
+# Verify database connection
+docker-compose exec backend dotnet ef database update
+```cker-compose logs
 
 # Restart services
 docker-compose restart
@@ -307,25 +332,10 @@ docker-compose logs backend
 docker-compose exec backend dotnet ef database update
 ```
 
-## 📝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 👥 Authors
 
-- **Mateusz** - Initial development and architecture
+- **Maria** - https://github.com/MariaBrodowska
+- **Mateusz** - https://github.com/MateuszBrankiewicz
+- **Adam** - https://github.com/ThePowerOf76
 
-## 🙏 Acknowledgments
-
-- Chart.js community for excellent charting library
-- .NET team for robust backend framework
-- React team for powerful frontend library
-- PostgreSQL team for reliable database system
